@@ -5,6 +5,9 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+import org.apache.commons.codec.binary.Hex;
+import org.apache.commons.codec.digest.DigestUtils;
+
 import android.annotation.SuppressLint;
 import android.util.Log;
 
@@ -21,6 +24,7 @@ class writeOperation extends FileOperation{
 				outStream.write(writeBuffer);
 				endTime = System.nanoTime();
 				useTime = useTime + endTime - startTime;
+				/*
 				for (int j = writeBuffer.length; j > 0; j--) {
     				Result.cksum += Result.cksum + writeBuffer[writeBuffer.length - j];
     				if (Result.cksum < 0) {
@@ -28,9 +32,12 @@ class writeOperation extends FileOperation{
     					Result.cksum += Result.cksum >>> 32;
     				}
 				}
+				*/
 			}
 			outStream.close();
+			Result.md5Cksum = new String(Hex.encodeHex(DigestUtils.md5(new FileInputStream(saveFile))));
 		} catch (IOException e) {}
+		
 		if (debug)Log.i("DEBUG", "write useTime " + useTime + "ns.");
 		Result.w_speed = (double)filesize / (double)useTime; //KB/ns
 		Result.w_speed = Result.w_speed / 1024 * 1000000000;
@@ -54,6 +61,7 @@ class readOperation extends FileOperation{
 				endTime = System.nanoTime();
 				if (n > 0) {
 					useTime = useTime + endTime - startTime;
+					/*
 					for (int j = readBuffer.length; j > 0; j--) {
 	    				Result.cksum += Result.cksum + readBuffer[readBuffer.length - j];
 	    				if (Result.cksum < 0) {
@@ -61,10 +69,12 @@ class readOperation extends FileOperation{
 	    					Result.cksum += Result.cksum >>> 32;
 	    				}
 					}
+					*/
 				}
 				filesize += n; //unit is B.
 			} while (n > 0);
 			inStream.close();
+			Result.md5Cksum = new String(Hex.encodeHex(DigestUtils.md5(new FileInputStream(saveFile))));
 		} catch (IOException e) {}
 		if (debug)Log.i("DEBUG", "read useTime " + useTime + "ns.");
 		Result.r_speed = (double)filesize / 1024 / (double)useTime; //KB/ns
@@ -89,6 +99,7 @@ public class FileOperation {
 	protected static class Result {
 		protected static Double w_speed = Double.valueOf(0);
 		protected static Double r_speed = Double.valueOf(0);
-		protected static  long cksum = 0;
+		//protected static  long cksum = 0;
+		protected static  String md5Cksum;
 	}
 }
