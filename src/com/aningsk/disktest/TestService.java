@@ -27,8 +27,6 @@ public class TestService extends Service implements Runnable {
 	private static int COUNT = 5;
 	private static double avrSpeed_w = 0;
 	private static double avrSpeed_r = 0;
-	//private static long w_cksum = 0;
-	//private static long r_cksum = 0;
 	private static String w_md5Cksum;
 	private static String r_md5Cksum;
 	private static int ckfailcount = 0;
@@ -72,20 +70,16 @@ public class TestService extends Service implements Runnable {
 					if (debug)Log.i(DEBUG, "File Size is " + filesize + "KB.");
 					//write the file that size is file size.
 					writeOperation writeFileOperation = new writeOperation();
-					//Result.cksum = 0;
 					Result.md5Cksum = null;
 					writeFileOperation.result = writeFileOperation.writeFile(filesize);
-					//w_cksum = Result.cksum;
 					w_md5Cksum = Result.md5Cksum;
 					Result.w_speed = (double)Math.round(Result.w_speed * 1000000) / 1000000.0;
 					if (debug)Log.i(DEBUG, "w_speed:" + Result.w_speed + " md5cksum:" + Result.md5Cksum);
 					
 					//read the file that size is file size.
 					readOperation readFileOperation = new readOperation();
-					//Result.cksum = 0;
 					Result.md5Cksum = null;
 					readFileOperation.result = readFileOperation.readFile();
-					//r_cksum = Result.cksum;
 					r_md5Cksum = Result.md5Cksum;
 					Result.r_speed = (double)Math.round(Result.r_speed * 1000000) / 1000000.0;
 					if (debug)Log.i(DEBUG, "r_speed:" + Result.r_speed + " md5cksum:" + Result.md5Cksum);
