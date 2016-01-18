@@ -43,19 +43,25 @@ public class TestService extends Service implements Runnable {
 	
 	@Override
 	public void run() {
+		try {
+			runService();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	public void runService() throws IOException {
 		int filesize = 0;
 		int count = 0;
 		if (debug)Log.i(DEBUG, "Thread run");
 
 		File resultFile = new File(resultPath, resultName); 
-		//FileOutputStream outStream = null;
+		if (resultFile.exists())
+			resultFile.delete();
+		
 		FileWriter resultWriter = null;
-        try {
-        	 //outStream = new FileOutputStream(saveResult);
-        	resultWriter = new FileWriter(resultFile, true);
-		} catch (IOException e) {
-			e.printStackTrace();
-		} 
+        resultWriter = new FileWriter(resultFile, true);
 
 		if (runFlag) {
 			if (debug)Log.i(DEBUG, "quantity:" + QUANTITY);
@@ -63,14 +69,14 @@ public class TestService extends Service implements Runnable {
 				while (count < COUNT && runFlag) {
 					filesize = testsize[s]; 
 					
-					if (count == 0) 
-						try {
-							resultWriter.write(("This is the test of " + filesize + "KB.\n"));
-							resultWriter.write("WSpeed\t\tRSpeed\t\tchecksum\n");
-						} catch (IOException e) {}
+					if (count == 0) {
+						resultWriter.write(("This is the test of " + filesize + "KB.\n"));
+						resultWriter.write("WSpeed\t\tRSpeed\t\tchecksum\n");
+					}
 					
 					if (debug)Log.i(DEBUG, " ");
 					if (debug)Log.i(DEBUG, "File Size is " + filesize + "KB.");
+					
 					//write the file that size is file size.
 					writeOperation writeFileOperation = new writeOperation();
 					Result.md5Cksum = null;
@@ -87,24 +93,17 @@ public class TestService extends Service implements Runnable {
 					Result.r_speed = (double)Math.round(Result.r_speed * 1000000) / 1000000.0;
 					if (debug)Log.i(DEBUG, "r_speed:" + Result.r_speed + " md5cksum:" + Result.md5Cksum);
 					
-					try {
-						resultWriter.write(Result.w_speed.toString());
-						resultWriter.write("\t");
-						resultWriter.write(Result.r_speed.toString());
-						resultWriter.write("\t");
-					} catch (IOException e) {}
+					resultWriter.write(Result.w_speed.toString());
+					resultWriter.write("\t");
+					resultWriter.write(Result.r_speed.toString());
+					resultWriter.write("\t");
 					
-					//if (r_cksum == w_cksum) {
 					if (r_md5Cksum.equals(w_md5Cksum)) {
-						try {
-							resultWriter.write("success\n");
-						} catch (IOException e) {}
+						resultWriter.write("success\n");
 						avrSpeed_w += Result.w_speed;
 						avrSpeed_r += Result.r_speed;
 					} else {
-						try {
-							resultWriter.write("fail\n");
-						} catch (IOException e) {}
+						resultWriter.write("fail\n");
 						ckfailcount++;
 					}
 					count++;
@@ -115,20 +114,16 @@ public class TestService extends Service implements Runnable {
 				avrSpeed_r = avrSpeed_r / (COUNT - ckfailcount);
 				avrSpeed_w = (double)Math.round(avrSpeed_w * 1000000) / 1000000.0;
 				avrSpeed_r  = (double)Math.round(avrSpeed_r * 1000000) / 1000000.0;
-				try {
-					resultWriter.write(("Result of " + filesize + "KB is:\n"));
-					resultWriter.write(("write average speed is " + avrSpeed_w + "M/s.\n"));
-					resultWriter.write(("read average speed is " + avrSpeed_r + "M/s.\n\n"));
-				} catch (IOException e) {}
+				resultWriter.write(("Result of " + filesize + "KB is:\n"));
+				resultWriter.write(("write average speed is " + avrSpeed_w + "M/s.\n"));
+				resultWriter.write(("read average speed is " + avrSpeed_r + "M/s.\n\n"));
 				avrSpeed_w = 0;
 				avrSpeed_r = 0;
 			} 
 			//All kinds size test is end.
 		}
 		
-		try {
-			resultWriter.close();
-		} catch (IOException e) {}
+		resultWriter.close();
 		
 		if (completeFlag) {
 			Intent testEnd = new Intent("TestEnd");
@@ -142,7 +137,7 @@ public class TestService extends Service implements Runnable {
 		
 		return;
 	}
-
+	
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		// TODO Auto-generated method stub
 		runFlag = true;
