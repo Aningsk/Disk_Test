@@ -1,4 +1,4 @@
-#Disk Test (Version 1.1) 
+#Disk Test (Version 1.2) 
 This Android APP is use to test your device's SD/eMMC.   
 Developed by Aningsk, and comply with Apache License Version 2.0
 
@@ -17,9 +17,13 @@ That is very very difficult to get develop tools or support libraries, since Goo
 I'm a Chinese newbie programmer without any VPN @\_@
 
 ##Version Mark 
-* 1.1 (2016-01-18)   
-    Use MD5 checksum, and change read/write API to FileReader/FileWriter.
-* 1.0 (2016-01-15)  
+* v1.2 (2016-01-18)   
+    The read/write speed is more accurate than before!  
+    If there is some fail in test, APP can tell us.
+* v1.1 (2016-01-18)   
+    Use MD5 checksum, and change read/write API to FileReader/FileWriter.  
+    The data written in file is random.
+* v1.0 (2016-01-15)  
     I use my old project to init the git repo.  
     Some functions were too stupid, I'll change them.
 
