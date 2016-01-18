@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
-import java.io.IOException;
 import java.util.Random;
 
 import org.apache.commons.codec.binary.Hex;
@@ -16,9 +15,10 @@ import android.util.Log;
 public class FileOperation {
 	protected static boolean debug = true;
 	@SuppressLint("SdCardPath")
-	protected static String testPath = "/storage/sdcard/TestFile.txt";
-//	protected static String testPath = "/storage/sdcard0/TestFile.txt";
-//	protected static String testPath = "/storage/sdcard1/TestFile.txt";
+	protected static String testPath = "/storage/sdcard/";
+	protected static String testFile = "TestFile.txt";
+//	protected static String testPath = "/storage/sdcard0/";
+//	protected static String testPath = "/storage/sdcard1/";
 	protected static String string = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 	int unit = 1024; //means KB
 
@@ -38,7 +38,7 @@ class writeOperation extends FileOperation{
 	
 	public Result writeFile(int filesize) {
 		Random random = new Random();
-		File saveFile = new File(testPath);
+		File saveFile = new File(testPath + testFile);
 		char[] writeBuffer = new char[unit];
 
 		if (saveFile.exists())
@@ -55,11 +55,14 @@ class writeOperation extends FileOperation{
 				fileWriter.write(writeBuffer);
 				endTime = System.nanoTime();
 				useTime = useTime + endTime - startTime;
+				Thread.sleep(50);
 			}
 
 			fileWriter.close();
 			Result.md5Cksum = new String(Hex.encodeHex(DigestUtils.md5(new FileInputStream(saveFile))));
-		} catch (IOException e) {}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		
 		if (debug)Log.i("DEBUG", "write useTime " + useTime + "ns.");
 		Result.w_speed = (double)filesize / (double)useTime; //KB/ns
@@ -70,13 +73,17 @@ class writeOperation extends FileOperation{
 
 class readOperation extends FileOperation{
 	public Result readFile() {
-		File saveFile = new File(testPath);
+		File saveFile = new File(testPath + testFile);
+		File tempFile = new File(testPath + "TempFile.txt");
 		char[] readBuffer = new char[unit];
 		int filesize = 0;
 		int n = 0;
 		
+		if (tempFile.exists())
+			tempFile.delete();
 		try {
 			FileReader fileReader = new FileReader(saveFile);
+			FileWriter fileWriter = new FileWriter(tempFile);
 
 			do {
 				startTime = System.nanoTime();
@@ -85,12 +92,17 @@ class readOperation extends FileOperation{
 				if (n > 0) {
 					useTime = useTime + endTime - startTime;
 					filesize += n; //here unit is B.
+					Thread.sleep(50);
+					fileWriter.write(readBuffer);
 				}
 			} while (n > 0);
 			
 			fileReader.close();
-			Result.md5Cksum = new String(Hex.encodeHex(DigestUtils.md5(new FileInputStream(saveFile))));
-		} catch (IOException e) {}
+			fileWriter.close();
+			Result.md5Cksum = new String(Hex.encodeHex(DigestUtils.md5(new FileInputStream(tempFile))));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		
 		if (debug)Log.i("DEBUG", "read useTime " + useTime + "ns.");
 		Result.r_speed = (double)filesize / 1024 / (double)useTime; //KB/ns

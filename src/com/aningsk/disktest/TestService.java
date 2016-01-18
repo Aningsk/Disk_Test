@@ -1,7 +1,7 @@
 package com.aningsk.disktest;
 
 import java.io.File;
-import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 
 import android.annotation.SuppressLint;
@@ -16,9 +16,10 @@ public class TestService extends Service implements Runnable {
 	private static final String DEBUG = "DEBUG";
 	private static boolean debug = true;
 	@SuppressLint("SdCardPath") 
-	private static String resultPath = "/storage/sdcard/TestResult.txt";
-//	private static String resultPath = "/storage/sdcard0/TestResult.txt";
-//	private static String resultPath = "/storage/sdcard1/TestResult.txt";
+	private static String resultPath = "/storage/sdcard/";
+	private static String resultName = "TestResult.txt";
+//	private static String resultPath = "/storage/sdcard0/";
+//	private static String resultPath = "/storage/sdcard1/";
 	
 	private static int[] testsize = {16, 32, 64, 128, 256, 512, 1024,
 		16*1024, 32*1024, 64*1024, 128*1024, 256*1024, 512*1024, 1024*1024};
@@ -42,17 +43,25 @@ public class TestService extends Service implements Runnable {
 	
 	@Override
 	public void run() {
+		try {
+			runService();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	public void runService() throws IOException {
 		int filesize = 0;
 		int count = 0;
 		if (debug)Log.i(DEBUG, "Thread run");
 
-		File saveResult = new File(resultPath); 
-		FileOutputStream outStream = null;
-        try {
-        	 outStream = new FileOutputStream(saveResult);
-		} catch (IOException e) {
-			e.printStackTrace();
-		} 
+		File resultFile = new File(resultPath, resultName); 
+		if (resultFile.exists())
+			resultFile.delete();
+		
+		FileWriter resultWriter = null;
+        resultWriter = new FileWriter(resultFile, true);
 
 		if (runFlag) {
 			if (debug)Log.i(DEBUG, "quantity:" + QUANTITY);
@@ -60,14 +69,14 @@ public class TestService extends Service implements Runnable {
 				while (count < COUNT && runFlag) {
 					filesize = testsize[s]; 
 					
-					if (count == 0) 
-						try {
-							outStream.write(("This is the test of " + filesize + "KB.\n").getBytes());
-							outStream.write("WSpeed\t\tRSpeed\t\tchecksum\n".getBytes());
-						} catch (IOException e) {}
+					if (count == 0) {
+						resultWriter.write(("This is the test of " + filesize + "KB.\n"));
+						resultWriter.write("WSpeed\t\tRSpeed\t\tchecksum\n");
+					}
 					
 					if (debug)Log.i(DEBUG, " ");
 					if (debug)Log.i(DEBUG, "File Size is " + filesize + "KB.");
+					
 					//write the file that size is file size.
 					writeOperation writeFileOperation = new writeOperation();
 					Result.md5Cksum = null;
@@ -84,24 +93,17 @@ public class TestService extends Service implements Runnable {
 					Result.r_speed = (double)Math.round(Result.r_speed * 1000000) / 1000000.0;
 					if (debug)Log.i(DEBUG, "r_speed:" + Result.r_speed + " md5cksum:" + Result.md5Cksum);
 					
-					try {
-						outStream.write(Result.w_speed.toString().getBytes());
-						outStream.write("\t".getBytes());
-						outStream.write(Result.r_speed.toString().getBytes());
-						outStream.write("\t".getBytes());
-					} catch (IOException e) {}
+					resultWriter.write(Result.w_speed.toString());
+					resultWriter.write("\t");
+					resultWriter.write(Result.r_speed.toString());
+					resultWriter.write("\t");
 					
-					//if (r_cksum == w_cksum) {
 					if (r_md5Cksum.equals(w_md5Cksum)) {
-						try {
-							outStream.write("success\n".getBytes());
-						} catch (IOException e) {}
+						resultWriter.write("success\n");
 						avrSpeed_w += Result.w_speed;
 						avrSpeed_r += Result.r_speed;
 					} else {
-						try {
-							outStream.write("fail\n".getBytes());
-						} catch (IOException e) {}
+						resultWriter.write("fail\n");
 						ckfailcount++;
 					}
 					count++;
@@ -112,30 +114,30 @@ public class TestService extends Service implements Runnable {
 				avrSpeed_r = avrSpeed_r / (COUNT - ckfailcount);
 				avrSpeed_w = (double)Math.round(avrSpeed_w * 1000000) / 1000000.0;
 				avrSpeed_r  = (double)Math.round(avrSpeed_r * 1000000) / 1000000.0;
-				try {
-					outStream.write(("Result of " + filesize + "KB is:\n").getBytes());
-					outStream.write(("write average speed is " + avrSpeed_w + "M/s.\n").getBytes());
-					outStream.write(("read average speed is " + avrSpeed_r + "M/s.\n\n").getBytes());
-				} catch (IOException e) {}
+				resultWriter.write(("Result of " + filesize + "KB is:\n"));
+				resultWriter.write(("write average speed is " + avrSpeed_w + "M/s.\n"));
+				resultWriter.write(("read average speed is " + avrSpeed_r + "M/s.\n\n"));
 				avrSpeed_w = 0;
 				avrSpeed_r = 0;
 			} 
 			//All kinds size test is end.
 		}
 		
-		try {
-			outStream.close();
-		} catch (IOException e) {}
+		resultWriter.close();
 		
 		if (completeFlag) {
 			Intent testEnd = new Intent("TestEnd");
 			testEnd.putExtra("endFlag", true);
+			if (ckfailcount == 0)
+				testEnd.putExtra("successFlag", true);
+			else
+				testEnd.putExtra("successFlag", false);
 			sendBroadcast(testEnd);
 		}
 		
 		return;
 	}
-
+	
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		// TODO Auto-generated method stub
 		runFlag = true;

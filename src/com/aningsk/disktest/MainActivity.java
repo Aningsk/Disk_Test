@@ -56,18 +56,18 @@ public class MainActivity extends Activity {
     
 	public void clickStart(View v) {
 		if (startFlag == false) {
-			showView.setText("Please wait. Testing...");
+			showView.setText(R.string.please_wait);
 			startFlag = true;
 			startService(service);
 		} else {
-			showView.setText("Please stop at first !");
+			showView.setText(R.string.please_stop);
 		}
 	}
 	
 	public void clickStop(View v) {
 		if (startFlag)
 			startFlag = false;
-		showView.setText("Stop Test.");
+		showView.setText(R.string.test_stop);
 		stopService(service);
 	}
 
@@ -77,9 +77,13 @@ public class MainActivity extends Activity {
 		public void onReceive(Context context, Intent intent) {
 			// TODO Auto-generated method stub
 			boolean endFlag = false;
+			boolean successFlag = false;
 			endFlag = intent.getBooleanExtra("endFlag", false);
-			if (endFlag == true)
-				showView.setText("Test is completed. Please stop it.");
+			successFlag = intent.getBooleanExtra("successFlag", false);
+			if (endFlag == true && successFlag == true)
+				showView.setText(R.string.test_success);
+			else if (endFlag == true && successFlag == false)
+				showView.setText(R.string.test_fail);
 		}
 		
 	}
