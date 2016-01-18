@@ -1,7 +1,7 @@
 package com.aningsk.disktest;
 
 import java.io.File;
-import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 
 import android.annotation.SuppressLint;
@@ -17,7 +17,7 @@ public class TestService extends Service implements Runnable {
 	private static boolean debug = true;
 	@SuppressLint("SdCardPath") 
 	private static String resultPath = "/storage/sdcard/";
-	private static String resultFile = "TestResult.txt";
+	private static String resultName = "TestResult.txt";
 //	private static String resultPath = "/storage/sdcard0/";
 //	private static String resultPath = "/storage/sdcard1/";
 	
@@ -47,10 +47,12 @@ public class TestService extends Service implements Runnable {
 		int count = 0;
 		if (debug)Log.i(DEBUG, "Thread run");
 
-		File saveResult = new File(resultPath, resultFile); 
-		FileOutputStream outStream = null;
+		File resultFile = new File(resultPath, resultName); 
+		//FileOutputStream outStream = null;
+		FileWriter resultWriter = null;
         try {
-        	 outStream = new FileOutputStream(saveResult);
+        	 //outStream = new FileOutputStream(saveResult);
+        	resultWriter = new FileWriter(resultFile, true);
 		} catch (IOException e) {
 			e.printStackTrace();
 		} 
@@ -63,8 +65,8 @@ public class TestService extends Service implements Runnable {
 					
 					if (count == 0) 
 						try {
-							outStream.write(("This is the test of " + filesize + "KB.\n").getBytes());
-							outStream.write("WSpeed\t\tRSpeed\t\tchecksum\n".getBytes());
+							resultWriter.write(("This is the test of " + filesize + "KB.\n"));
+							resultWriter.write("WSpeed\t\tRSpeed\t\tchecksum\n");
 						} catch (IOException e) {}
 					
 					if (debug)Log.i(DEBUG, " ");
@@ -86,22 +88,22 @@ public class TestService extends Service implements Runnable {
 					if (debug)Log.i(DEBUG, "r_speed:" + Result.r_speed + " md5cksum:" + Result.md5Cksum);
 					
 					try {
-						outStream.write(Result.w_speed.toString().getBytes());
-						outStream.write("\t".getBytes());
-						outStream.write(Result.r_speed.toString().getBytes());
-						outStream.write("\t".getBytes());
+						resultWriter.write(Result.w_speed.toString());
+						resultWriter.write("\t");
+						resultWriter.write(Result.r_speed.toString());
+						resultWriter.write("\t");
 					} catch (IOException e) {}
 					
 					//if (r_cksum == w_cksum) {
 					if (r_md5Cksum.equals(w_md5Cksum)) {
 						try {
-							outStream.write("success\n".getBytes());
+							resultWriter.write("success\n");
 						} catch (IOException e) {}
 						avrSpeed_w += Result.w_speed;
 						avrSpeed_r += Result.r_speed;
 					} else {
 						try {
-							outStream.write("fail\n".getBytes());
+							resultWriter.write("fail\n");
 						} catch (IOException e) {}
 						ckfailcount++;
 					}
@@ -114,9 +116,9 @@ public class TestService extends Service implements Runnable {
 				avrSpeed_w = (double)Math.round(avrSpeed_w * 1000000) / 1000000.0;
 				avrSpeed_r  = (double)Math.round(avrSpeed_r * 1000000) / 1000000.0;
 				try {
-					outStream.write(("Result of " + filesize + "KB is:\n").getBytes());
-					outStream.write(("write average speed is " + avrSpeed_w + "M/s.\n").getBytes());
-					outStream.write(("read average speed is " + avrSpeed_r + "M/s.\n\n").getBytes());
+					resultWriter.write(("Result of " + filesize + "KB is:\n"));
+					resultWriter.write(("write average speed is " + avrSpeed_w + "M/s.\n"));
+					resultWriter.write(("read average speed is " + avrSpeed_r + "M/s.\n\n"));
 				} catch (IOException e) {}
 				avrSpeed_w = 0;
 				avrSpeed_r = 0;
@@ -125,7 +127,7 @@ public class TestService extends Service implements Runnable {
 		}
 		
 		try {
-			outStream.close();
+			resultWriter.close();
 		} catch (IOException e) {}
 		
 		if (completeFlag) {
