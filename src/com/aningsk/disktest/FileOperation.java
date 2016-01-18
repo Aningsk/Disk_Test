@@ -16,9 +16,10 @@ import android.util.Log;
 public class FileOperation {
 	protected static boolean debug = true;
 	@SuppressLint("SdCardPath")
-	protected static String testPath = "/storage/sdcard/TestFile.txt";
-//	protected static String testPath = "/storage/sdcard0/TestFile.txt";
-//	protected static String testPath = "/storage/sdcard1/TestFile.txt";
+	protected static String testPath = "/storage/sdcard/";
+	protected static String testFile = "TestFile.txt";
+//	protected static String testPath = "/storage/sdcard0/";
+//	protected static String testPath = "/storage/sdcard1/";
 	protected static String string = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 	int unit = 1024; //means KB
 
@@ -38,7 +39,7 @@ class writeOperation extends FileOperation{
 	
 	public Result writeFile(int filesize) {
 		Random random = new Random();
-		File saveFile = new File(testPath);
+		File saveFile = new File(testPath + testFile);
 		char[] writeBuffer = new char[unit];
 
 		if (saveFile.exists())
@@ -70,13 +71,17 @@ class writeOperation extends FileOperation{
 
 class readOperation extends FileOperation{
 	public Result readFile() {
-		File saveFile = new File(testPath);
+		File saveFile = new File(testPath + testFile);
+		File tempFile = new File(testPath + "TempFile.txt");
 		char[] readBuffer = new char[unit];
 		int filesize = 0;
 		int n = 0;
 		
+		if (tempFile.exists())
+			tempFile.delete();
 		try {
 			FileReader fileReader = new FileReader(saveFile);
+			FileWriter fileWriter = new FileWriter(tempFile);
 
 			do {
 				startTime = System.nanoTime();
@@ -85,11 +90,13 @@ class readOperation extends FileOperation{
 				if (n > 0) {
 					useTime = useTime + endTime - startTime;
 					filesize += n; //here unit is B.
+					fileWriter.write(readBuffer);
 				}
 			} while (n > 0);
 			
 			fileReader.close();
-			Result.md5Cksum = new String(Hex.encodeHex(DigestUtils.md5(new FileInputStream(saveFile))));
+			fileWriter.close();
+			Result.md5Cksum = new String(Hex.encodeHex(DigestUtils.md5(new FileInputStream(tempFile))));
 		} catch (IOException e) {}
 		
 		if (debug)Log.i("DEBUG", "read useTime " + useTime + "ns.");

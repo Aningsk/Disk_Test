@@ -56,18 +56,18 @@ public class MainActivity extends Activity {
     
 	public void clickStart(View v) {
 		if (startFlag == false) {
-			showView.setText("Please wait. Testing...");
+			showView.setText(R.string.please_wait);
 			startFlag = true;
 			startService(service);
 		} else {
-			showView.setText("Please stop at first !");
+			showView.setText(R.string.please_stop);
 		}
 	}
 	
 	public void clickStop(View v) {
 		if (startFlag)
 			startFlag = false;
-		showView.setText("Stop Test.");
+		showView.setText(R.string.test_stop);
 		stopService(service);
 	}
 
@@ -79,7 +79,7 @@ public class MainActivity extends Activity {
 			boolean endFlag = false;
 			endFlag = intent.getBooleanExtra("endFlag", false);
 			if (endFlag == true)
-				showView.setText("Test is completed. Please stop it.");
+				showView.setText(R.string.test_success);
 		}
 		
 	}

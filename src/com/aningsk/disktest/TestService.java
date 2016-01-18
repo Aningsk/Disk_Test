@@ -16,9 +16,10 @@ public class TestService extends Service implements Runnable {
 	private static final String DEBUG = "DEBUG";
 	private static boolean debug = true;
 	@SuppressLint("SdCardPath") 
-	private static String resultPath = "/storage/sdcard/TestResult.txt";
-//	private static String resultPath = "/storage/sdcard0/TestResult.txt";
-//	private static String resultPath = "/storage/sdcard1/TestResult.txt";
+	private static String resultPath = "/storage/sdcard/";
+	private static String resultFile = "TestResult.txt";
+//	private static String resultPath = "/storage/sdcard0/";
+//	private static String resultPath = "/storage/sdcard1/";
 	
 	private static int[] testsize = {16, 32, 64, 128, 256, 512, 1024,
 		16*1024, 32*1024, 64*1024, 128*1024, 256*1024, 512*1024, 1024*1024};
@@ -46,7 +47,7 @@ public class TestService extends Service implements Runnable {
 		int count = 0;
 		if (debug)Log.i(DEBUG, "Thread run");
 
-		File saveResult = new File(resultPath); 
+		File saveResult = new File(resultPath, resultFile); 
 		FileOutputStream outStream = null;
         try {
         	 outStream = new FileOutputStream(saveResult);
