@@ -77,9 +77,13 @@ public class MainActivity extends Activity {
 		public void onReceive(Context context, Intent intent) {
 			// TODO Auto-generated method stub
 			boolean endFlag = false;
+			boolean successFlag = false;
 			endFlag = intent.getBooleanExtra("endFlag", false);
-			if (endFlag == true)
+			successFlag = intent.getBooleanExtra("successFlag", false);
+			if (endFlag == true && successFlag == true)
 				showView.setText(R.string.test_success);
+			else if (endFlag == true && successFlag == false)
+				showView.setText(R.string.test_fail);
 		}
 		
 	}

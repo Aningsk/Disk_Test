@@ -131,6 +131,10 @@ public class TestService extends Service implements Runnable {
 		if (completeFlag) {
 			Intent testEnd = new Intent("TestEnd");
 			testEnd.putExtra("endFlag", true);
+			if (ckfailcount == 0)
+				testEnd.putExtra("successFlag", true);
+			else
+				testEnd.putExtra("successFlad", false);
 			sendBroadcast(testEnd);
 		}
 		
