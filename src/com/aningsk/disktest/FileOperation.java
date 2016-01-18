@@ -56,11 +56,14 @@ class writeOperation extends FileOperation{
 				fileWriter.write(writeBuffer);
 				endTime = System.nanoTime();
 				useTime = useTime + endTime - startTime;
+				Thread.sleep(50);
 			}
 
 			fileWriter.close();
 			Result.md5Cksum = new String(Hex.encodeHex(DigestUtils.md5(new FileInputStream(saveFile))));
-		} catch (IOException e) {}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		
 		if (debug)Log.i("DEBUG", "write useTime " + useTime + "ns.");
 		Result.w_speed = (double)filesize / (double)useTime; //KB/ns
@@ -90,6 +93,7 @@ class readOperation extends FileOperation{
 				if (n > 0) {
 					useTime = useTime + endTime - startTime;
 					filesize += n; //here unit is B.
+					Thread.sleep(50);
 					fileWriter.write(readBuffer);
 				}
 			} while (n > 0);
@@ -97,7 +101,9 @@ class readOperation extends FileOperation{
 			fileReader.close();
 			fileWriter.close();
 			Result.md5Cksum = new String(Hex.encodeHex(DigestUtils.md5(new FileInputStream(tempFile))));
-		} catch (IOException e) {}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		
 		if (debug)Log.i("DEBUG", "read useTime " + useTime + "ns.");
 		Result.r_speed = (double)filesize / 1024 / (double)useTime; //KB/ns
