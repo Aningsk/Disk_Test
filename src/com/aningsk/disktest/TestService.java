@@ -134,7 +134,7 @@ public class TestService extends Service implements Runnable {
 			if (ckfailcount == 0)
 				testEnd.putExtra("successFlag", true);
 			else
-				testEnd.putExtra("successFlad", false);
+				testEnd.putExtra("successFlag", false);
 			sendBroadcast(testEnd);
 		}
 		
