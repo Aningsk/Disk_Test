@@ -16,7 +16,7 @@ import java.io.File;
  * -> validateValue(String str, long min, long max, boolean canEqualMin, boolean canEqualMax)
  * As the double could be printed '1.0E7' and its length will be shorter than its real value.
  */
-public class validator {
+public class Validator {
 
 	/**
 	 * Return whether all the character in the string is number
