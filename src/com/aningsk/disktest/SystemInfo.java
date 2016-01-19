@@ -56,10 +56,9 @@ public class SystemInfo {
 	private String cleanString(String str, String prefix, boolean getAll) {
 		String mainString;
 		mainString = str.substring(prefix.length() + 1); //"+1" for remove the '\n' at the end of prefix.
-		if (getAll) {
+		if (getAll) 
 			return mainString.substring(0, mainString.lastIndexOf('\n')); //get all except the last '\n'.
-		} else {
+		else 
 			return mainString.substring(0, mainString.indexOf('\n')); //only get first line without '\n'.
-		}
 	}
 }
