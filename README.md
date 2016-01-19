@@ -1,4 +1,4 @@
-#Disk Test (Version 1.2) 
+#Disk Test (Version 1.3) 
 This Android APP is use to test your device's SD/eMMC.   
 Developed by Aningsk, and comply with Apache License Version 2.0
 
@@ -17,6 +17,8 @@ That is very very difficult to get develop tools or support libraries, since Goo
 I'm a Chinese newbie programmer without any VPN @\_@
 
 ##Version Mark 
+* v1.3 (2016-01-19)   
+    The APP can show RAM size, eMMC size and partitions information.
 * v1.2 (2016-01-18)   
     The read/write speed is more accurate than before!  
     If there is some fail in test, APP can tell us.
