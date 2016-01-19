@@ -9,11 +9,12 @@ public class SystemInfo {
 	private String diskSize;
 	private String ramSize;
 	
+	private final String getDiskSizeCmd = "cat /sys/block/mmcblk0/size";
 	private final String getPartitionsCmd = "cat /proc/partitions";
 	
 	SystemInfo() {
 		partitions = doExec(getPartitionsCmd).substring(getPartitionsCmd.length());
-		diskSize = null;
+		diskSize = cleanString(doExec(getDiskSizeCmd), getDiskSizeCmd);
 		ramSize = null;
 	}
 	
@@ -41,5 +42,18 @@ public class SystemInfo {
 			e.printStackTrace();
 		}
 		return str;
+	}
+	
+	/**
+	 * Cut out a main string.
+	 *
+	 * @param str		Original String.
+	 * @param prefix	Which String will be remove from str.
+	 * @return New string without prefix and '\n' at the end of str.
+	 */
+	private String cleanString(String str, String prefix) {
+		String mainString;
+		mainString = str.substring(prefix.length() + 1); //"+1" for remove the '\n' at the end of prefix.
+		return mainString.substring(0, mainString.lastIndexOf('\n'));
 	}
 }
