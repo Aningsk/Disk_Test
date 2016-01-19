@@ -52,10 +52,12 @@ public class MainActivity extends Activity {
 			}
         });
         
-        showRamSize.setText(getResources().getString(R.string.ram_size) + ":" + systemInfo.getRamSize());
+        showRamSize.setText(getResources().getString(R.string.ram_size) + ":" + 
+        		systemInfo.getRamSize());
         showDiskSize.setText(getResources().getString(R.string.disk_size) + ":" + 
-        		Integer.parseInt(systemInfo.getDiskSize()) * 512 / 1024 / 1024 + "MB");
-        showPartitions.setText(getResources().getString(R.string.partitions) + ":" + systemInfo.getPartitions());
+        		Integer.parseInt(systemInfo.getDiskSize()) * 512 / 1024 / 1024 + " MB");
+        showPartitions.setText(getResources().getString(R.string.partitions) + ":" + 
+        		"\n" + systemInfo.getPartitions());
     }
     
     protected void onDestroy() {
