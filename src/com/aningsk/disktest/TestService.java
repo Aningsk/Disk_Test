@@ -3,6 +3,7 @@ package com.aningsk.disktest;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.DecimalFormat;
 
 import android.annotation.SuppressLint;
 import android.app.Service;
@@ -35,6 +36,7 @@ public class TestService extends Service implements Runnable {
 	private static boolean runFlag = true;
 	private static boolean completeFlag = true; //can complete or not.
 	private Thread testThread = null;
+	private DecimalFormat df = new DecimalFormat("0.000000");
 	
 	public void onCreate() {
 		super.onCreate();
@@ -83,7 +85,7 @@ public class TestService extends Service implements Runnable {
 					writeFileOperation.result = writeFileOperation.writeFile(filesize);
 					w_md5Cksum = Result.md5Cksum;
 					Result.w_speed = (double)Math.round(Result.w_speed * 1000000) / 1000000.0;
-					if (debug)Log.i(DEBUG, "w_speed:" + Result.w_speed + " md5cksum:" + Result.md5Cksum);
+					if (debug)Log.i(DEBUG, "w_speed:" + df.format(Result.w_speed) + " md5cksum:" + Result.md5Cksum);
 					
 					//read the file that size is file size.
 					readOperation readFileOperation = new readOperation();
@@ -91,11 +93,11 @@ public class TestService extends Service implements Runnable {
 					readFileOperation.result = readFileOperation.readFile();
 					r_md5Cksum = Result.md5Cksum;
 					Result.r_speed = (double)Math.round(Result.r_speed * 1000000) / 1000000.0;
-					if (debug)Log.i(DEBUG, "r_speed:" + Result.r_speed + " md5cksum:" + Result.md5Cksum);
+					if (debug)Log.i(DEBUG, "r_speed:" + df.format(Result.r_speed) + " md5cksum:" + Result.md5Cksum);
 					
-					resultWriter.write(Result.w_speed.toString());
+					resultWriter.write(df.format(Result.w_speed).toString());
 					resultWriter.write("\t");
-					resultWriter.write(Result.r_speed.toString());
+					resultWriter.write(df.format(Result.r_speed).toString());
 					resultWriter.write("\t");
 					
 					if (r_md5Cksum.equals(w_md5Cksum)) {
@@ -115,8 +117,8 @@ public class TestService extends Service implements Runnable {
 				avrSpeed_w = (double)Math.round(avrSpeed_w * 1000000) / 1000000.0;
 				avrSpeed_r  = (double)Math.round(avrSpeed_r * 1000000) / 1000000.0;
 				resultWriter.write(("Result of " + filesize + "KB is:\n"));
-				resultWriter.write(("write average speed is " + avrSpeed_w + "M/s.\n"));
-				resultWriter.write(("read average speed is " + avrSpeed_r + "M/s.\n\n"));
+				resultWriter.write(("write average speed is " + df.format(avrSpeed_w) + "M/s.\n"));
+				resultWriter.write(("read average speed is " + df.format(avrSpeed_r) + "M/s.\n\n"));
 				avrSpeed_w = 0;
 				avrSpeed_r = 0;
 			} 
