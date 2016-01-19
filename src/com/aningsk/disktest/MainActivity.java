@@ -13,8 +13,9 @@ import android.widget.TextView;
 
 public class MainActivity extends Activity {
 	private Intent service;
-	private serviceReceiver receiver;	
-	private TextView showView;
+	private serviceReceiver receiver; 
+	private SystemInfo systemInfo;
+	private TextView showView, showDiskSize, showRamSize, showPartitions;
 	private Button startButton, stopButton;
 	private boolean startFlag = false; //make sure Service cannot start before stop.
 	
@@ -26,7 +27,11 @@ public class MainActivity extends Activity {
         showView = (TextView)findViewById(R.id.textView1);
         startButton = (Button)findViewById(R.id.button1);
         stopButton = (Button)findViewById(R.id.button2);
+        showRamSize = (TextView)findViewById(R.id.textView2);
+        showDiskSize = (TextView)findViewById(R.id.textView3);
+        showPartitions = (TextView)findViewById(R.id.textView4);
         
+        systemInfo = new SystemInfo();
         receiver = new serviceReceiver();
 		IntentFilter filter = new IntentFilter("TestEnd");
 		registerReceiver(receiver, filter);
@@ -46,6 +51,13 @@ public class MainActivity extends Activity {
 				clickStop(arg0);
 			}
         });
+        
+        showRamSize.setText(getResources().getString(R.string.ram_size) + ":" + 
+        		systemInfo.getRamSize());
+        showDiskSize.setText(getResources().getString(R.string.disk_size) + ":" + 
+        		Integer.parseInt(systemInfo.getDiskSize()) * 512 / 1024 / 1024 + " MB");
+        showPartitions.setText(getResources().getString(R.string.partitions) + ":" + 
+        		"\n" + systemInfo.getPartitions());
     }
     
     protected void onDestroy() {

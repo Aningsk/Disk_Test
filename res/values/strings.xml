@@ -6,6 +6,9 @@
     <string name="start_button">Start</string>
     <string name="stop_button">Stop</string>
     <string name="title_text">Disk Test</string>
+    <string name="ram_size">RAM Size</string>
+    <string name="disk_size">Disk Size</string>
+    <string name="partitions">Partitions</string>
     
     <string name="please_wait">Please wait. Testing now.</string>
     <string name="please_stop">Please stop at first !</string>
