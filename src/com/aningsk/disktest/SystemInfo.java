@@ -12,7 +12,7 @@ public class SystemInfo {
 	private final String getPartitionsCmd = "cat /proc/partitions";
 	
 	SystemInfo() {
-		partitions = doExec(getPartitionsCmd);
+		partitions = doExec(getPartitionsCmd).substring(getPartitionsCmd.length());
 		diskSize = null;
 		ramSize = null;
 	}

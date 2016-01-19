@@ -54,7 +54,7 @@ public class MainActivity extends Activity {
         
         showRamSize.setText(getResources().getString(R.string.ram_size) + ":" + systemInfo.getRamSize());
         showDiskSize.setText(getResources().getString(R.string.disk_size) + ":" + systemInfo.getDiskSize());
-        showPartitions.setText(systemInfo.getPartitions());
+        showPartitions.setText(getResources().getString(R.string.partitions) + ":" + systemInfo.getPartitions());
     }
     
     protected void onDestroy() {
