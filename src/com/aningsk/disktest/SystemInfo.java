@@ -9,13 +9,14 @@ public class SystemInfo {
 	private String diskSize;
 	private String ramSize;
 	
+	private final String getRamSizeCmd = "cat /proc/meminfo | grep Memtotal ";
 	private final String getDiskSizeCmd = "cat /sys/block/mmcblk0/size";
 	private final String getPartitionsCmd = "cat /proc/partitions";
 	
 	SystemInfo() {
 		partitions = doExec(getPartitionsCmd).substring(getPartitionsCmd.length());
 		diskSize = cleanString(doExec(getDiskSizeCmd), getDiskSizeCmd);
-		ramSize = null;
+		ramSize = cleanString(doExec(getRamSizeCmd), getRamSizeCmd);
 	}
 	
 	public String getPartitions() {
