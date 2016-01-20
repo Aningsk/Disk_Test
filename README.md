@@ -21,6 +21,10 @@ I'm a Chinese newbie programmer without any VPN @\_@
     If something is getting wrong such as IOEception, user can know that.   
     DiskSize means /data size, not /sdcard. If necessary I can change it.   
     All file created by the APP will be saved in "DiskTest" folder.
+* v1.3.3 (2016-01-20)
+    BUG:   
+    If user stops a running TestService, the last average speed will get wrong.   
+    Fixed.
 * v1.3.2 (2016-01-19)   
     Decimal format as 0.000000 in the TestResult.txt   
     Adjust some strings.
