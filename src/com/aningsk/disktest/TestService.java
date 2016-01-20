@@ -110,17 +110,20 @@ public class TestService extends Service implements Runnable {
 					}
 					count++;
 				}
-				count = 0;
+				
 				//One kind size test is end, now should get average speed.
-				avrSpeed_w = avrSpeed_w / (COUNT - ckfailcount);
-				avrSpeed_r = avrSpeed_r / (COUNT - ckfailcount);
+				avrSpeed_w = avrSpeed_w / (count - ckfailcount);
+				avrSpeed_r = avrSpeed_r / (count - ckfailcount);
 				avrSpeed_w = (double)Math.round(avrSpeed_w * 1000000) / 1000000.0;
 				avrSpeed_r  = (double)Math.round(avrSpeed_r * 1000000) / 1000000.0;
+				
 				resultWriter.write(("Result of " + filesize + "KB is:\n"));
 				resultWriter.write(("write average speed is " + df.format(avrSpeed_w) + "M/s.\n"));
 				resultWriter.write(("read average speed is " + df.format(avrSpeed_r) + "M/s.\n\n"));
+				
 				avrSpeed_w = 0;
 				avrSpeed_r = 0;
+				count = 0;
 			} 
 			//All kinds size test is end.
 		}
