@@ -9,6 +9,8 @@
     <string name="ram_size">RAM Size</string>
     <string name="disk_size">Disk Size</string>
     <string name="partitions">Partitions</string>
+    <string name="available">Available</string>
+    <string name="total">Total</string>
     
     <string name="please_wait">Please wait. Testing now.</string>
     <string name="please_stop">Please stop at first!</string>

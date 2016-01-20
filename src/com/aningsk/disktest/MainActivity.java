@@ -54,8 +54,12 @@ public class MainActivity extends Activity {
         
         showRamSize.setText(getResources().getString(R.string.ram_size) + ":" + 
         		systemInfo.getRamSize());
+//        showDiskSize.setText(getResources().getString(R.string.disk_size) + ":" + 
+//        		Integer.parseInt(systemInfo.getDiskSize()) * 512 / 1024 / 1024 + " MB");
         showDiskSize.setText(getResources().getString(R.string.disk_size) + ":" + 
-        		Integer.parseInt(systemInfo.getDiskSize()) * 512 / 1024 / 1024 + " MB");
+        		systemInfo.getAvailableInternalDiskSize() / 1024 / 1024 + " MB " + 
+        		getResources().getString(R.string.available)+ " - " + getResources().getString(R.string.total) + " " +
+        		systemInfo.getTotalInternalDiskSize() / 1024 / 1024 + " MB ");
         showPartitions.setText(getResources().getString(R.string.partitions) + ":" + 
         		"\n" + systemInfo.getPartitions());
     }

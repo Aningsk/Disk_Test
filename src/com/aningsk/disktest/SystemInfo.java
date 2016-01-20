@@ -1,33 +1,52 @@
 package com.aningsk.disktest;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+import android.os.Environment;
+import android.os.StatFs;
+
 public class SystemInfo {
 	private String partitions;
-	private String diskSize;
+	//private String diskSize;
 	private String ramSize;
+	private long availableInternalDiskSize;
+	private long totalInternalDiskSize;
 	
 	private final String getRamSizeCmd = "cat /proc/meminfo";
-	private final String getDiskSizeCmd = "cat /sys/block/mmcblk0/size";
+	//private final String getDiskSizeCmd = "cat /sys/block/mmcblk0/size";
 	private final String getPartitionsCmd = "cat /proc/partitions";
 	private final String indexOfMemtotal = "Memtotal:         "; //there are 9 blanks
 	
 	SystemInfo() {
 		partitions = cleanString(doExec(getPartitionsCmd), getPartitionsCmd, true);
-		diskSize = cleanString(doExec(getDiskSizeCmd), getDiskSizeCmd, false);
+		//diskSize = cleanString(doExec(getDiskSizeCmd), getDiskSizeCmd, false);
 		ramSize = cleanString(doExec(getRamSizeCmd), getRamSizeCmd + indexOfMemtotal, false);
+		availableInternalDiskSize = getAvailableInternalMemorySize();
+		totalInternalDiskSize = getTotalInternalMemorySize();
+		
 	}
 	
 	public String getPartitions() {
 		return this.partitions;
 	}
+	/*
 	public String getDiskSize() {
 		return this.diskSize;
 	}
+	*/
 	public String getRamSize() {
 		return this.ramSize;
+	}
+	
+	public long getAvailableInternalDiskSize() {
+		return this.availableInternalDiskSize;
+	}
+	
+	public long getTotalInternalDiskSize() {
+		return this.totalInternalDiskSize;
 	}
 	
 	private String doExec(String cmd) {
@@ -61,4 +80,46 @@ public class SystemInfo {
 		else 
 			return mainString.substring(0, mainString.indexOf('\n')); //only get first line without '\n'.
 	}
+	/*
+    @SuppressLint("NewApi")
+	public static long getAvailableInternalMemorySizeLong() {
+        File path = Environment.getDataDirectory();
+        StatFs stat = new StatFs(path.getPath());
+        long blockSize = stat.getBlockSizeLong();
+        long availableBlocks = stat.getAvailableBlocksLong();
+        return availableBlocks * blockSize;
+    }
+
+    @SuppressLint("NewApi")
+	public static long getTotalInternalMemorySizeLong() {
+        File path = Environment.getDataDirectory();
+        StatFs stat = new StatFs(path.getPath());
+        long blockSize = stat.getBlockSizeLong();
+        long totalBlocks = stat.getBlockCountLong();
+        return totalBlocks * blockSize;
+    }
+	*/
+    @SuppressWarnings("deprecation")
+	public static long getAvailableInternalMemorySize() {
+        File path = Environment.getDataDirectory();
+        StatFs stat = new StatFs(path.getPath());
+        long blockSize = stat.getBlockSize();
+        long availableBlocks = stat.getAvailableBlocks();
+        return availableBlocks * blockSize;
+    }
+
+    @SuppressWarnings("deprecation")
+	public static long getTotalInternalMemorySize() {
+        File path = Environment.getDataDirectory();
+        StatFs stat = new StatFs(path.getPath());
+        long blockSize = stat.getBlockSize();
+        long totalBlocks = stat.getBlockCount();
+        return totalBlocks * blockSize;
+    }
+    
+    public static boolean externalMemoryAvailable() {
+        return android.os.Environment.getExternalStorageState().equals(
+                android.os.Environment.MEDIA_MOUNTED);
+    }
+    
 }
