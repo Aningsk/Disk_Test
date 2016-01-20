@@ -33,8 +33,10 @@ public class MainActivity extends Activity {
         
         systemInfo = new SystemInfo();
         receiver = new serviceReceiver();
-		IntentFilter filter = new IntentFilter("TestEnd");
-		registerReceiver(receiver, filter);
+		IntentFilter testFilter = new IntentFilter("TestEnd");
+		IntentFilter failFilter = new IntentFilter("TestFail");
+		registerReceiver(receiver, testFilter);
+		registerReceiver(receiver, failFilter);
         service = new Intent(MainActivity.this, TestService.class);
         
         startButton.setOnClickListener(new OnClickListener() {
@@ -94,11 +96,17 @@ public class MainActivity extends Activity {
 			// TODO Auto-generated method stub
 			boolean endFlag = false;
 			boolean successFlag = false;
+			boolean failFlag = false;
 			endFlag = intent.getBooleanExtra("endFlag", false);
 			successFlag = intent.getBooleanExtra("successFlag", false);
+			failFlag = intent.getBooleanExtra("failFlag", false);
+			
 			if (endFlag == true && successFlag == true)
 				showView.setText(R.string.test_success);
 			else if (endFlag == true && successFlag == false)
+				showView.setText(R.string.test_fail);
+			
+			if (failFlag)
 				showView.setText(R.string.test_fail);
 		}
 		

@@ -56,6 +56,9 @@ public class TestService extends Service implements Runnable {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			Intent testFail = new Intent("TestFail");
+			testFail.putExtra("failFlag", true);
+			sendBroadcast(testFail);
 		}
 	}
 
@@ -130,7 +133,6 @@ public class TestService extends Service implements Runnable {
 			} 
 			//All kinds size test is end.
 		}
-		
 		resultWriter.close();
 		
 		if (completeFlag) {
