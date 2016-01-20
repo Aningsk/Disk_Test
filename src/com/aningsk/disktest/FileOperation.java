@@ -9,14 +9,17 @@ import java.util.Random;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.codec.digest.DigestUtils;
 
-import android.annotation.SuppressLint;
+import android.os.Environment;
 import android.util.Log;
 
 public class FileOperation {
 	protected static boolean debug = true;
-	@SuppressLint("SdCardPath")
-	protected static String testPath = "/storage/sdcard/";
-	protected static String testFile = "TestFile.txt";
+	
+	//protected static String testPath = Environment.getDataDirectory() + File.separator + "DiskTest";
+	protected static String testPath = Environment.getExternalStorageDirectory() + File.separator + "DiskTest";
+	protected static String testFile = File.separator + "TestFile.txt";
+//	@SuppressLint("SdCardPath")
+//	protected static String testPath = "/storage/sdcard/";
 //	protected static String testPath = "/storage/sdcard0/";
 //	protected static String testPath = "/storage/sdcard1/";
 	protected static String string = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
@@ -26,6 +29,11 @@ public class FileOperation {
 	protected Long endTime = Long.valueOf(0L);
 	protected Long useTime = Long.valueOf(0L);
 	
+	FileOperation() {
+		File folder = new File(testPath);
+		if (!folder.exists())
+			folder.mkdir();
+	}
 	protected Result result= new Result();
 	protected static class Result {
 		protected static Double w_speed = Double.valueOf(0);
@@ -74,7 +82,7 @@ class writeOperation extends FileOperation{
 class readOperation extends FileOperation{
 	public Result readFile() {
 		File saveFile = new File(testPath + testFile);
-		File tempFile = new File(testPath + "TempFile.txt");
+		File tempFile = new File(testPath + File.separator + "TempFile.txt");
 		char[] readBuffer = new char[unit];
 		int filesize = 0;
 		int n = 0;

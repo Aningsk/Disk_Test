@@ -33,8 +33,10 @@ public class MainActivity extends Activity {
         
         systemInfo = new SystemInfo();
         receiver = new serviceReceiver();
-		IntentFilter filter = new IntentFilter("TestEnd");
-		registerReceiver(receiver, filter);
+		IntentFilter testFilter = new IntentFilter("TestEnd");
+		IntentFilter failFilter = new IntentFilter("TestFail");
+		registerReceiver(receiver, testFilter);
+		registerReceiver(receiver, failFilter);
         service = new Intent(MainActivity.this, TestService.class);
         
         startButton.setOnClickListener(new OnClickListener() {
@@ -54,8 +56,12 @@ public class MainActivity extends Activity {
         
         showRamSize.setText(getResources().getString(R.string.ram_size) + ":" + 
         		systemInfo.getRamSize());
+//        showDiskSize.setText(getResources().getString(R.string.disk_size) + ":" + 
+//        		Integer.parseInt(systemInfo.getDiskSize()) * 512 / 1024 / 1024 + " MB");
         showDiskSize.setText(getResources().getString(R.string.disk_size) + ":" + 
-        		Integer.parseInt(systemInfo.getDiskSize()) * 512 / 1024 / 1024 + " MB");
+        		systemInfo.getAvailableInternalDiskSize() / 1024 / 1024 + " MB " + 
+        		getResources().getString(R.string.available)+ " - " + getResources().getString(R.string.total) + " " +
+        		systemInfo.getTotalInternalDiskSize() / 1024 / 1024 + " MB ");
         showPartitions.setText(getResources().getString(R.string.partitions) + ":" + 
         		"\n" + systemInfo.getPartitions());
     }
@@ -67,7 +73,7 @@ public class MainActivity extends Activity {
     }
     
 	public void clickStart(View v) {
-		if (startFlag == false) {
+		if (!startFlag) {
 			showView.setText(R.string.please_wait);
 			startFlag = true;
 			startService(service);
@@ -90,11 +96,17 @@ public class MainActivity extends Activity {
 			// TODO Auto-generated method stub
 			boolean endFlag = false;
 			boolean successFlag = false;
+			boolean failFlag = false;
 			endFlag = intent.getBooleanExtra("endFlag", false);
 			successFlag = intent.getBooleanExtra("successFlag", false);
-			if (endFlag == true && successFlag == true)
+			failFlag = intent.getBooleanExtra("failFlag", false);
+			
+			if (endFlag && successFlag)
 				showView.setText(R.string.test_success);
-			else if (endFlag == true && successFlag == false)
+			else if (endFlag && !successFlag)
+				showView.setText(R.string.test_fail);
+			
+			if (failFlag)
 				showView.setText(R.string.test_fail);
 		}
 		

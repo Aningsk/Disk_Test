@@ -9,11 +9,13 @@
     <string name="ram_size">内存大小</string>
     <string name="disk_size">磁盘大小</string>
     <string name="partitions">分区信息</string>
+    <string name="available">可用</string>
+    <string name="total">共计</string>
     
     <string name="please_wait">正在测试，请等待。</string>
     <string name="please_stop">请先结束之前的测试！</string>
     <string name="test_stop">测试已经结束。</string>
     <string name="test_success">任务完成。请结束本次测试。</string>
-    <string name="test_fail">测试过程中出现了失败。</string>
+    <string name="test_fail">悲剧了！测试过程出现异常。</string>
     
 </resources>
