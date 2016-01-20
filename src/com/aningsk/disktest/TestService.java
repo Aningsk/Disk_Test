@@ -5,9 +5,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.text.DecimalFormat;
 
-import android.annotation.SuppressLint;
 import android.app.Service;
 import android.content.Intent;
+import android.os.Environment;
 import android.os.IBinder;
 import android.util.Log;
 
@@ -16,9 +16,12 @@ import com.aningsk.disktest.FileOperation.Result;
 public class TestService extends Service implements Runnable {
 	private static final String DEBUG = "DEBUG";
 	private static boolean debug = true;
-	@SuppressLint("SdCardPath") 
-	private static String resultPath = "/storage/sdcard/";
-	private static String resultName = "TestResult.txt";
+	
+	//private static String resultPath = Environment.getDataDirectory() + File.separator + "DiskTest";
+	private static String resultPath = Environment.getExternalStorageDirectory() + File.separator + "DiskTest";
+	private static String resultName = File.separator + "TestResult.txt";
+//	@SuppressLint("SdCardPath") 
+//	private static String resultPath = "/storage/sdcard/";
 //	private static String resultPath = "/storage/sdcard0/";
 //	private static String resultPath = "/storage/sdcard1/";
 	
@@ -40,6 +43,9 @@ public class TestService extends Service implements Runnable {
 	
 	public void onCreate() {
 		super.onCreate();
+		File folder = new File(resultPath);
+		if (!folder.exists())
+			folder.mkdir();
 		testThread = new Thread(this);
 	}
 	
