@@ -73,7 +73,7 @@ public class MainActivity extends Activity {
     }
     
 	public void clickStart(View v) {
-		if (startFlag == false) {
+		if (!startFlag) {
 			showView.setText(R.string.please_wait);
 			startFlag = true;
 			startService(service);
@@ -101,9 +101,9 @@ public class MainActivity extends Activity {
 			successFlag = intent.getBooleanExtra("successFlag", false);
 			failFlag = intent.getBooleanExtra("failFlag", false);
 			
-			if (endFlag == true && successFlag == true)
+			if (endFlag && successFlag)
 				showView.setText(R.string.test_success);
-			else if (endFlag == true && successFlag == false)
+			else if (endFlag && !successFlag)
 				showView.setText(R.string.test_fail);
 			
 			if (failFlag)
