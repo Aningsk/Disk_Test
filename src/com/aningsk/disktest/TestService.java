@@ -7,7 +7,6 @@ import java.text.DecimalFormat;
 
 import android.app.Service;
 import android.content.Intent;
-import android.os.Environment;
 import android.os.IBinder;
 import android.util.Log;
 
@@ -17,13 +16,9 @@ public class TestService extends Service implements Runnable {
 	private static final String DEBUG = "DEBUG";
 	private static boolean debug = true;
 	
-	//private static String resultPath = Environment.getDataDirectory() + File.separator + "DiskTest";
-	private static String resultPath = Environment.getExternalStorageDirectory() + File.separator + "DiskTest";
+	//private static String resultPath = Environment.getExternalStorageDirectory() + File.separator + "DiskTest";
+	private String resultPath = DiskTestApplication.getContext().getFilesDir() + File.separator + "DiskTest";
 	private static String resultName = File.separator + "TestResult.txt";
-//	@SuppressLint("SdCardPath") 
-//	private static String resultPath = "/storage/sdcard/";
-//	private static String resultPath = "/storage/sdcard0/";
-//	private static String resultPath = "/storage/sdcard1/";
 	
 	private static int[] testsize = {16, 32, 64, 128, 256, 512, 1024,
 		16*1024, 32*1024, 64*1024, 128*1024, 256*1024, 512*1024, 1024*1024};

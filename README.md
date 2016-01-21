@@ -1,4 +1,4 @@
-#Disk Test (Version 1.4) 
+#Disk Test (Version 1.5) 
 This Android APP is use to test your device's SD/eMMC.   
 Developed by Aningsk, and comply with Apache License Version 2.0
 
@@ -17,6 +17,9 @@ That is very very difficult to get develop tools or support libraries, since Goo
 I'm a Chinese newbie programmer without any VPN @\_@
 
 ##Version Mark 
+* v1.5 (2016-01-21)   
+    Now the APP can read/write in internal disk, as the test files are in the APP private path.  
+    So it does not need uid.system. 
 * v1.4 (2016-01-20)   
     If something is getting wrong such as IOEception, user can know that.   
     DiskSize means /data size, not /sdcard. If necessary I can change it.   
