@@ -14,14 +14,10 @@ import android.util.Log;
 public class FileOperation {
 	protected static boolean debug = true;
 	
-	//protected static String testPath = Environment.getDataDirectory() + File.separator + "DiskTest";
 	//protected static String testPath = Environment.getExternalStorageDirectory() + File.separator + "DiskTest";
 	protected static String testPath = DiskTestApplication.getContext().getFilesDir() + File.separator + "DiskTest";
 	protected static String testFile = File.separator + "TestFile.txt";
-//	@SuppressLint("SdCardPath")
-//	protected static String testPath = "/storage/sdcard/";
-//	protected static String testPath = "/storage/sdcard0/";
-//	protected static String testPath = "/storage/sdcard1/";
+
 	protected static String string = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 	int unit = 1024; //means KB
 
