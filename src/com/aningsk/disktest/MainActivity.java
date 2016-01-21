@@ -118,20 +118,27 @@ public class MainActivity extends Activity {
 	}
 	
 	public void clickResult(View v) throws IOException{
-		String result = "";
-		resultPath = DiskTestApplication.getContext().getFilesDir() + File.separator + "DiskTest";
-		File resultFile = new File(resultPath + File.separator + "TestResult.txt");
-		InputStream instream = new FileInputStream(resultFile);
-		if (instream != null) {
-			InputStreamReader inputreader = new InputStreamReader(instream);
-			BufferedReader bufferreader = new BufferedReader(inputreader);
-			String line;
-			while ((line = bufferreader.readLine()) != null)
-				result += line + "\n";
-			instream.close();
+		String result = "Disk Test Result: \n";
+		if (inforFlag) {
+			resultPath = DiskTestApplication.getContext().getFilesDir() + File.separator + "DiskTest";
+			File resultFile = new File(resultPath + File.separator + "TestResult.txt");
+			InputStream instream = new FileInputStream(resultFile);
+			if (instream != null) {
+				InputStreamReader inputreader = new InputStreamReader(instream);
+				BufferedReader bufferreader = new BufferedReader(inputreader);
+				String line;
+				while ((line = bufferreader.readLine()) != null)
+					result += line + "\n";
+				instream.close();
+			}
+			showInformation.setText(result);
+			reslutButton.setText(R.string.partitions_button);
+		} else {
+			showInformation.setText(getResources().getString(R.string.partitions) + ":" + 
+	        		"\n" + systemInfo.getPartitions());
+			reslutButton.setText(R.string.result_button);
 		}
-		showInformation.setText(result);
-
+		inforFlag = !inforFlag;
 	}
 
 	private class serviceReceiver extends BroadcastReceiver{
