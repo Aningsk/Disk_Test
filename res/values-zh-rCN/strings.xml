@@ -5,6 +5,8 @@
     <string name="action_settings">设置</string>
     <string name="start_button">开始测试</string>
     <string name="stop_button">结束测试</string>
+    <string name="result_button">显示结果</string>
+    <string name="partitions_button">显示分区</string>
     <string name="title_text">磁盘测试就绪</string>
     <string name="ram_size">内存大小</string>
     <string name="disk_size">磁盘大小</string>
