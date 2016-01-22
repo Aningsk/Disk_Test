@@ -10,13 +10,11 @@ import android.os.StatFs;
 
 public class SystemInfo {
 	private static String partitions;
-	//private static String diskSize;
 	private static String ramSize;
 	private static long availableInternalDiskSize;
 	private static long totalInternalDiskSize;
 	
 	private static final String getRamSizeCmd = "cat /proc/meminfo";
-	//private static final String getDiskSizeCmd = "cat /sys/block/mmcblk0/size";
 	private static final String getPartitionsCmd = "cat /proc/partitions";
 	private static final String indexOfMemtotal = "Memtotal:         "; //there are 9 blanks
 		
@@ -24,12 +22,7 @@ public class SystemInfo {
 		partitions = cleanString(doExec(getPartitionsCmd), getPartitionsCmd, true);
 		return partitions;
 	}
-	/*
-	public static String getDiskSize() {
-		diskSize = cleanString(doExec(getDiskSizeCmd), getDiskSizeCmd, false);
-		return diskSize;
-	}
-	*/
+
 	public static String getRamSize() {
 		ramSize = cleanString(doExec(getRamSizeCmd), getRamSizeCmd + indexOfMemtotal, false);
 		return ramSize;

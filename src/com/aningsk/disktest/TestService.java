@@ -16,8 +16,6 @@ public class TestService extends Service implements Runnable {
 	private static final String DEBUG = "DEBUG";
 	private static boolean debug = true;
 	
-	//private static String resultPath = DiskTestApplication.getTestExternalPath();
-	//private static String resultPath = DiskTestApplication.getTestResultPath();
 	/**
 	 * We must get path and name here. 
 	 * And re-getting them in run() is also necessary!

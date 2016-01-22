@@ -24,7 +24,6 @@ import android.widget.TextView;
 public class MainActivity extends Activity {
 	private Intent service;
 	private serviceReceiver receiver; 
-	//private SystemInfo systemInfo;
 	private TextView showView, showDiskSize, showRamSize, showInformation;
 	private Button startButton, stopButton, reslutButton;
 	private RadioGroup selectDisk;
@@ -49,7 +48,6 @@ public class MainActivity extends Activity {
         showDiskSize = (TextView)findViewById(R.id.textView3);
         showInformation = (TextView)findViewById(R.id.textView4);
         
-        //systemInfo = new SystemInfo();
         receiver = new serviceReceiver();
 		IntentFilter testFilter = new IntentFilter("TestEnd");
 		IntentFilter failFilter = new IntentFilter("TestFail");
@@ -115,8 +113,6 @@ public class MainActivity extends Activity {
         
         showRamSize.setText(getResources().getString(R.string.ram_size) + ":" + 
         		SystemInfo.getRamSize());
-//        showDiskSize.setText(getResources().getString(R.string.disk_size) + ":" + 
-//        		Integer.parseInt(systemInfo.getDiskSize()) * 512 / 1024 / 1024 + " MB");
         showDiskSize.setText(getResources().getString(R.string.disk_size) + ":" + 
         		SystemInfo.getAvailableDiskSize() / 1024 / 1024 + " MB " + 
         		getResources().getString(R.string.available)+ " - " + getResources().getString(R.string.total) + " " +

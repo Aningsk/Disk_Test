@@ -10,11 +10,7 @@ public class DiskTestApplication extends Application{
 	private static boolean internalDiskSelected = true; //default select internal disk.
 	
 	private static Context context;
-	/*
-	private static String testInternalPath;
-	private static String testExternalPath;
-	private static String testResultPath;
-	*/
+
 	private static String testPath;
 	private static String resultPath;
 	
@@ -26,11 +22,7 @@ public class DiskTestApplication extends Application{
 	
 	public void onCreate() {
 		context = getApplicationContext();
-		/*
-		testInternalPath = context.getFilesDir() + File.separator + "DiskTest";
-		testExternalPath = Environment.getExternalStorageDirectory() + File.separator + "DiskTest";
-		testResultPath = context.getFilesDir() + File.separator + "DiskTest";
-		*/
+
 		testPath = context.getFilesDir() + File.separator + "DiskTest";
 		resultPath = context.getFilesDir() + File.separator + "DiskTest";
 		
@@ -70,19 +62,7 @@ public class DiskTestApplication extends Application{
 			resultPath = context.getFilesDir() + File.separator + "DiskTest";
 		return resultPath;
 	}
-	/*
-	public static String getTestInternalPath() {
-		return testInternalPath;
-	}
-	
-	public static String getTestExternalPath() {
-		return testExternalPath;
-	}
-	
-	public static String getTestResultPath() {
-		return testResultPath;
-	}
-	*/
+
 	public static String getTestFileName() {
 		return testFileName;
 	}
