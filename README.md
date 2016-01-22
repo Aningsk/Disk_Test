@@ -1,11 +1,16 @@
-#Disk Test (Version 1.5.1) 
+#Disk Test (Version 1.6) 
 This Android APP is use to test your device's SD/eMMC.   
 Developed by Aningsk, and comply with Apache License Version 2.0
 
 ##Description
 This APP can calculate the speed of read/write in SD/eMMC, and save the result in a file.
-Sometime we shall change some code to make sure it can run on another device. 
-It isn't enough smart now.
+User can select where they want to take test on (Internal or External Disk).
+As a whole test will spend too long time, sometimes I only take a bit of test (16K and 32K files). 
+If you want to test other kinds size, please change the QUANTITY or testsize in TestService.java 
+and make sure that your device has enough big disk.   
+When the APP takes a test, it will create TestFile.txt with random data, and copy it as 
+TempFile.txt . APP can check the MD5 of these two file are the same value or not, and get the 
+speed of read/write. And repeat 5 times. User can see the result by clicking "Result" button.
 
 I use ADT(eclipse) to develop this project. I cannot get Android Studio.  
 And run it on Android-4.4.2 and Android-4.4.3 (I don't test it on other Android versions.)
@@ -17,6 +22,8 @@ That is very very difficult to get develop tools or support libraries, since Goo
 I'm a Chinese newbie programmer without any VPN @\_@
 
 ##Version Mark 
+* v1.6 (2016-01-22)   
+    Support that take test on internal disk or external disk.
 * v1.5.1 (2016-01-22)   
     It can show the TestResult.txt on UI.   
     Unitize some values by DiskSizeApplication.
