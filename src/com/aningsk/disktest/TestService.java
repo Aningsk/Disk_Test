@@ -16,9 +16,9 @@ public class TestService extends Service implements Runnable {
 	private static final String DEBUG = "DEBUG";
 	private static boolean debug = true;
 	
-	//private static String resultPath = Environment.getExternalStorageDirectory() + File.separator + "DiskTest";
-	private String resultPath = DiskTestApplication.getContext().getFilesDir() + File.separator + "DiskTest";
-	private static String resultName = File.separator + "TestResult.txt";
+	//private static String resultPath = DiskTestApplication.getTestExternalPath();
+	private static String resultPath = DiskTestApplication.getTestResultPath();
+	private static String resultName = File.separator + DiskTestApplication.getResultFileName();
 	
 	private static int[] testsize = {16, 32, 64, 128, 256, 512, 1024,
 		16*1024, 32*1024, 64*1024, 128*1024, 256*1024, 512*1024, 1024*1024};
@@ -68,7 +68,7 @@ public class TestService extends Service implements Runnable {
 		
 		FileWriter resultWriter = null;
         resultWriter = new FileWriter(resultFile, true);
-
+        
 		if (runFlag) {
 			if (debug)Log.i(DEBUG, "quantity:" + QUANTITY);
 			for (int s = 0; s < QUANTITY && runFlag; s++) { 

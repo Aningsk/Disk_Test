@@ -19,33 +19,29 @@ public class SystemInfo {
 	//private final String getDiskSizeCmd = "cat /sys/block/mmcblk0/size";
 	private final String getPartitionsCmd = "cat /proc/partitions";
 	private final String indexOfMemtotal = "Memtotal:         "; //there are 9 blanks
-	
-	SystemInfo() {
-		partitions = cleanString(doExec(getPartitionsCmd), getPartitionsCmd, true);
-		//diskSize = cleanString(doExec(getDiskSizeCmd), getDiskSizeCmd, false);
-		ramSize = cleanString(doExec(getRamSizeCmd), getRamSizeCmd + indexOfMemtotal, false);
-		availableInternalDiskSize = getAvailableInternalMemorySize();
-		totalInternalDiskSize = getTotalInternalMemorySize();
 		
-	}
-	
 	public String getPartitions() {
+		this.partitions = cleanString(doExec(getPartitionsCmd), getPartitionsCmd, true);
 		return this.partitions;
 	}
 	/*
 	public String getDiskSize() {
+		this.diskSize = cleanString(doExec(getDiskSizeCmd), getDiskSizeCmd, false);
 		return this.diskSize;
 	}
 	*/
 	public String getRamSize() {
+		this.ramSize = cleanString(doExec(getRamSizeCmd), getRamSizeCmd + indexOfMemtotal, false);
 		return this.ramSize;
 	}
 	
 	public long getAvailableInternalDiskSize() {
+		this.availableInternalDiskSize = getAvailableInternalMemorySize();
 		return this.availableInternalDiskSize;
 	}
 	
 	public long getTotalInternalDiskSize() {
+		this.totalInternalDiskSize = getTotalInternalMemorySize();
 		return this.totalInternalDiskSize;
 	}
 	
