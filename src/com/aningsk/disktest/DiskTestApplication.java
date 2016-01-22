@@ -11,9 +11,12 @@ public class DiskTestApplication extends Application{
 	private static String testInternalPath;
 	private static String testExternalPath;
 	private static String testResultPath;
+	
 	private static String testFileName;
 	private static String tempFileName;
 	private static String resultFileName;
+	
+	private static String testData;
 	
 	public void onCreate() {
 		context = getApplicationContext();
@@ -23,6 +26,7 @@ public class DiskTestApplication extends Application{
 		testFileName = "TestFile.txt";
 		tempFileName = "TempFile.txt";
 		resultFileName = "TestResult.txt";
+		testData = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 	}
 	
 	public static Context getContext() {
@@ -51,5 +55,9 @@ public class DiskTestApplication extends Application{
 	
 	public static String getResultFileName() {
 		return resultFileName;
+	}
+	
+	public static String getTestData() {
+		return testData;
 	}
 }

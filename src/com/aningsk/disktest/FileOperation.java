@@ -14,11 +14,11 @@ import android.util.Log;
 public class FileOperation {
 	protected static boolean debug = true;
 	
-	//protected static String testPath = Environment.getExternalStorageDirectory() + File.separator + "DiskTest";
-	protected static String testPath = DiskTestApplication.getContext().getFilesDir() + File.separator + "DiskTest";
-	protected static String testFile = File.separator + "TestFile.txt";
+	//protected static String testPath = DiskTestApplication.getTestExternalPath();
+	protected static String testPath = DiskTestApplication.getTestInternalPath();
+	protected static String testFile = File.separator + DiskTestApplication.getTestFileName();
 
-	protected static String string = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+	protected static String string = DiskTestApplication.getTestData();
 	int unit = 1024; //means KB
 
 	protected Long startTime = Long.valueOf(0L);
@@ -38,7 +38,8 @@ public class FileOperation {
 	}
 }
 
-class writeOperation extends FileOperation{
+class writeOperation extends FileOperation { 
+	
 	public Result writeFile(int filesize) {
 		Random random = new Random();
 		File saveFile = new File(testPath + testFile);
@@ -51,7 +52,7 @@ class writeOperation extends FileOperation{
 			
 			for (int i = 0; i < filesize; i++) {
 				for (int j = 0; j < unit; j++) {
-					int number = random.nextInt(62);// [0,62)
+					int number = random.nextInt(string.length());// [0,62)
 					writeBuffer[i] = string.charAt(number);
 				}
 				startTime = System.nanoTime();
@@ -74,10 +75,11 @@ class writeOperation extends FileOperation{
 	}
 }
 
-class readOperation extends FileOperation{
+class readOperation extends FileOperation { 
+	
 	public Result readFile() {
 		File saveFile = new File(testPath + testFile);
-		File tempFile = new File(testPath + File.separator + "TempFile.txt");
+		File tempFile = new File(testPath + File.separator + DiskTestApplication.getTempFileName());
 		char[] readBuffer = new char[unit];
 		int filesize = 0;
 		int n = 0;
