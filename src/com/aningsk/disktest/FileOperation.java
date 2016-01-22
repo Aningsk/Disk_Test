@@ -14,18 +14,19 @@ import android.util.Log;
 public class FileOperation {
 	protected static boolean debug = true;
 	
-	//protected static String testPath = DiskTestApplication.getTestExternalPath();
-	protected static String testPath = DiskTestApplication.getTestInternalPath();
-	protected static String testFile = File.separator + DiskTestApplication.getTestFileName();
+	protected static String testPath;
+	protected static String testFile;
 
 	protected static String string = DiskTestApplication.getTestData();
-	int unit = 1024; //means KB
+	protected int unit = 1024; //means KB
 
 	protected Long startTime = Long.valueOf(0L);
 	protected Long endTime = Long.valueOf(0L);
 	protected Long useTime = Long.valueOf(0L);
 	
 	FileOperation() {
+		testPath = DiskTestApplication.getTestPath();
+		testFile = File.separator + DiskTestApplication.getTestFileName();
 		File folder = new File(testPath);
 		if (!folder.exists())
 			folder.mkdir();
