@@ -22,5 +22,9 @@
     <string name="test_stop">测试已经结束。</string>
     <string name="test_success">任务完成。请结束本次测试。</string>
     <string name="test_fail">悲剧了！测试过程出现异常。</string>
+    <string name="test_on_inter">对内部磁盘进行测试</string>
+    <string name="test_on_exter">对外部磁盘进行测试</string>
+    <string name="cannot_change">警告：没有外部磁盘！</string>
+    <string name="change_locked">别动！测试中不许更改</string>
     
 </resources>

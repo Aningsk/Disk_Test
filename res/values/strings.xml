@@ -22,5 +22,9 @@
     <string name="test_stop">Test has been stoped.</string>
     <string name="test_success">Mission accomplished. Please stop it.</string>
     <string name="test_fail">Unfortunately, test is end with some fail.</string>
+    <string name="test_on_inter">Test on Internal Disk</string>
+    <string name="test_on_exter">Test on External Disk</string>
+    <string name="cannot_change">Warning: Not found External Disk!</string>
+    <string name="change_locked">Test is running. Don\'t change it!</string>
 
 </resources>

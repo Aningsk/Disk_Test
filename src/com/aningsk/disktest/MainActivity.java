@@ -80,7 +80,7 @@ public class MainActivity extends Activity {
 					reslutButton.setText(R.string.result_button);
 					inforFlag = true;
 				} else {
-					showView.setText("Test is running. Don't change it!");
+					showView.setText(R.string.change_locked);
 					selectDisk.check(selectedRadioButton);
 				}
 			}
@@ -137,15 +137,15 @@ public class MainActivity extends Activity {
     public void changeSelectDisk(RadioGroup arg0, int arg1) {
 		switch (arg1) {
 		case R.id.radioButton1: //Internal Disk
-			showView.setText("Test on Internal Disk");
+			showView.setText(R.string.test_on_inter);
 			DiskTestApplication.selectInternalDisk(true);
 			break;
 		case R.id.radioButton2: //External Disk
 			if (SystemInfo.externalMemoryAvailable()) {
-				showView.setText("Test on External Disk");
+				showView.setText(R.string.test_on_exter);
 				DiskTestApplication.selectInternalDisk(false);
 			} else {
-				showView.setText("Warning: Not found External Disk!");
+				showView.setText(R.string.cannot_change);
 				DiskTestApplication.selectInternalDisk(true);
 				arg0.check(R.id.radioButton1);
 			}
