@@ -7,10 +7,16 @@ import android.content.Context;
 import android.os.Environment;
 
 public class DiskTestApplication extends Application{
+	private static boolean internalDiskSelected = true; //default select internal disk.
+	
 	private static Context context;
+	/*
 	private static String testInternalPath;
 	private static String testExternalPath;
 	private static String testResultPath;
+	*/
+	private static String testPath;
+	private static String resultPath;
 	
 	private static String testFileName;
 	private static String tempFileName;
@@ -20,19 +26,51 @@ public class DiskTestApplication extends Application{
 	
 	public void onCreate() {
 		context = getApplicationContext();
+		/*
 		testInternalPath = context.getFilesDir() + File.separator + "DiskTest";
 		testExternalPath = Environment.getExternalStorageDirectory() + File.separator + "DiskTest";
 		testResultPath = context.getFilesDir() + File.separator + "DiskTest";
+		*/
+		testPath = context.getFilesDir() + File.separator + "DiskTest";
+		resultPath = context.getFilesDir() + File.separator + "DiskTest";
+		
 		testFileName = "TestFile.txt";
 		tempFileName = "TempFile.txt";
 		resultFileName = "TestResult.txt";
 		testData = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 	}
 	
+	public static boolean getInternalDiskSelectState() {
+		return internalDiskSelected;
+	}
+	
+	public static void selectInternalDisk(boolean b) {
+		if (!b && !SystemInfo.externalMemoryAvailable())
+			internalDiskSelected = !b;
+		else 
+			internalDiskSelected = b;
+	}
+	
 	public static Context getContext() {
 		return context;
 	}
 	
+	public static String getTestPath() {
+		if (!internalDiskSelected && SystemInfo.externalMemoryAvailable()) 
+			testPath = Environment.getExternalStorageDirectory() + File.separator + "DiskTest";
+		else 
+			testPath = context.getFilesDir() + File.separator + "DiskTest";
+		return testPath;
+	}
+	
+	public static String getResultPath() {
+		if (!internalDiskSelected && SystemInfo.externalMemoryAvailable())
+			resultPath = Environment.getExternalStorageDirectory() + File.separator + "DiskTest";
+		else 
+			resultPath = context.getFilesDir() + File.separator + "DiskTest";
+		return resultPath;
+	}
+	/*
 	public static String getTestInternalPath() {
 		return testInternalPath;
 	}
@@ -44,7 +82,7 @@ public class DiskTestApplication extends Application{
 	public static String getTestResultPath() {
 		return testResultPath;
 	}
-	
+	*/
 	public static String getTestFileName() {
 		return testFileName;
 	}
