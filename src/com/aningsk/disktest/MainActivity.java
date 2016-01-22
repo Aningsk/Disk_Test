@@ -17,17 +17,23 @@ import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.RadioGroup;
+import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.TextView;
 
 public class MainActivity extends Activity {
 	private Intent service;
 	private serviceReceiver receiver; 
-	private SystemInfo systemInfo;
+	//private SystemInfo systemInfo;
 	private TextView showView, showDiskSize, showRamSize, showInformation;
 	private Button startButton, stopButton, reslutButton;
+	private RadioGroup selectDisk;
 	private boolean startFlag = false; //make sure Service cannot start before stop.
 	private boolean inforFlag = true;
 	private String resultPath = null;
+	
+	private boolean lockRadioGroup = false;
+	private int selectedRadioButton;
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +41,7 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
         showView = (TextView)findViewById(R.id.textView1);
+        selectDisk = (RadioGroup)findViewById(R.id.radioGroup);
         startButton = (Button)findViewById(R.id.button1);
         stopButton = (Button)findViewById(R.id.button2);
         reslutButton = (Button)findViewById(R.id.button3);
@@ -42,7 +49,7 @@ public class MainActivity extends Activity {
         showDiskSize = (TextView)findViewById(R.id.textView3);
         showInformation = (TextView)findViewById(R.id.textView4);
         
-        systemInfo = new SystemInfo();
+        //systemInfo = new SystemInfo();
         receiver = new serviceReceiver();
 		IntentFilter testFilter = new IntentFilter("TestEnd");
 		IntentFilter failFilter = new IntentFilter("TestFail");
@@ -52,6 +59,24 @@ public class MainActivity extends Activity {
 		registerReceiver(receiver, resultFilter);
         service = new Intent(MainActivity.this, TestService.class);
         
+        selectedRadioButton = DiskTestApplication.getInternalDiskSelectState() ? R.id.radioButton1 : R.id.radioButton2;
+        selectDisk.check(selectedRadioButton);
+        
+        selectDisk.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+
+			@Override
+			public void onCheckedChanged(RadioGroup arg0, int arg1) {
+				// TODO Auto-generated method stub
+				if (!lockRadioGroup) {
+					changeSelectDisk(arg0, arg1);
+					selectedRadioButton = arg1;
+				} else {
+					showView.setText("Test is running. Don't change it!");
+					selectDisk.check(selectedRadioButton);
+				}
+			}
+        	
+        });
         startButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
@@ -80,15 +105,15 @@ public class MainActivity extends Activity {
         });
         
         showRamSize.setText(getResources().getString(R.string.ram_size) + ":" + 
-        		systemInfo.getRamSize());
+        		SystemInfo.getRamSize());
 //        showDiskSize.setText(getResources().getString(R.string.disk_size) + ":" + 
 //        		Integer.parseInt(systemInfo.getDiskSize()) * 512 / 1024 / 1024 + " MB");
         showDiskSize.setText(getResources().getString(R.string.disk_size) + ":" + 
-        		systemInfo.getAvailableInternalDiskSize() / 1024 / 1024 + " MB " + 
+        		SystemInfo.getAvailableInternalDiskSize() / 1024 / 1024 + " MB " + 
         		getResources().getString(R.string.available)+ " - " + getResources().getString(R.string.total) + " " +
-        		systemInfo.getTotalInternalDiskSize() / 1024 / 1024 + " MB ");
+        		SystemInfo.getTotalInternalDiskSize() / 1024 / 1024 + " MB ");
         showInformation.setText(getResources().getString(R.string.partitions) + ":" + 
-        		"\n" + systemInfo.getPartitions());
+        		"\n" + SystemInfo.getPartitions());
         
         showInformation.setMovementMethod(ScrollingMovementMethod.getInstance());  
         showInformation.setHorizontallyScrolling(true);
@@ -100,7 +125,27 @@ public class MainActivity extends Activity {
 		stopService(service);
     }
     
+    public void changeSelectDisk(RadioGroup arg0, int arg1) {
+		switch (arg1) {
+		case R.id.radioButton1: //Internal Disk
+			showView.setText("Test on Internal Disk");
+			DiskTestApplication.isInternalDisk(true);
+			break;
+		case R.id.radioButton2: //External Disk
+			if (SystemInfo.externalMemoryAvailable()) {
+				showView.setText("Test on External Disk");
+				DiskTestApplication.isInternalDisk(false);
+			} else {
+				showView.setText("Warning: Not found External Disk!");
+				DiskTestApplication.isInternalDisk(true);
+				arg0.check(R.id.radioButton1);
+			}
+			break;
+		}
+    }
+    
 	public void clickStart(View v) {
+		lockRadioGroup = true;
 		if (!startFlag) {
 			showView.setText(R.string.please_wait);
 			startFlag = true;
@@ -111,6 +156,7 @@ public class MainActivity extends Activity {
 	}
 	
 	public void clickStop(View v) {
+		lockRadioGroup = false;
 		if (startFlag)
 			startFlag = false;
 		showView.setText(R.string.test_stop);
@@ -120,8 +166,8 @@ public class MainActivity extends Activity {
 	public void clickResult(View v) throws IOException{
 		String result = "Disk Test Result: \n";
 		if (inforFlag) {
-			resultPath = DiskTestApplication.getContext().getFilesDir() + File.separator + "DiskTest";
-			File resultFile = new File(resultPath + File.separator + "TestResult.txt");
+			resultPath = DiskTestApplication.getResultPath();
+			File resultFile = new File(resultPath + File.separator + DiskTestApplication.getResultFileName());
 			InputStream instream = new FileInputStream(resultFile);
 			if (instream != null) {
 				InputStreamReader inputreader = new InputStreamReader(instream);
@@ -135,7 +181,7 @@ public class MainActivity extends Activity {
 			reslutButton.setText(R.string.partitions_button);
 		} else {
 			showInformation.setText(getResources().getString(R.string.partitions) + ":" + 
-	        		"\n" + systemInfo.getPartitions());
+	        		"\n" + SystemInfo.getPartitions());
 			reslutButton.setText(R.string.result_button);
 		}
 		inforFlag = !inforFlag;
