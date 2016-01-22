@@ -77,6 +77,20 @@ public class SystemInfo {
 		else 
 			return mainString.substring(0, mainString.indexOf('\n')); //only get first line without '\n'.
 	}
+	
+	public static long getAvailableDiskSize() {
+		if (DiskTestApplication.getInternalDiskSelectState())
+			return getAvailableInternalMemorySize();
+		else
+			return getAvailableExternalMemorySize();
+	}
+	
+	public static long getTotalDiskSize() {
+		if (DiskTestApplication.getInternalDiskSelectState())
+			return getTotalInternalMemorySize();
+		else
+			return getTotalExternalMemorySize();
+	}
 	/*
     @SuppressLint("NewApi")
 	public static long getAvailableInternalMemorySizeLong() {

@@ -70,6 +70,11 @@ public class MainActivity extends Activity {
 				if (!lockRadioGroup) {
 					changeSelectDisk(arg0, arg1);
 					selectedRadioButton = arg1;
+					
+					showDiskSize.setText(getResources().getString(R.string.disk_size) + ":" + 
+			        		SystemInfo.getAvailableDiskSize() / 1024 / 1024 + " MB " + 
+			        		getResources().getString(R.string.available)+ " - " + getResources().getString(R.string.total) + " " +
+			        		SystemInfo.getTotalDiskSize() / 1024 / 1024 + " MB ");
 					showInformation.setText(getResources().getString(R.string.partitions) + ":" + 
 			        		"\n" + SystemInfo.getPartitions());
 					reslutButton.setText(R.string.result_button);
@@ -113,9 +118,9 @@ public class MainActivity extends Activity {
 //        showDiskSize.setText(getResources().getString(R.string.disk_size) + ":" + 
 //        		Integer.parseInt(systemInfo.getDiskSize()) * 512 / 1024 / 1024 + " MB");
         showDiskSize.setText(getResources().getString(R.string.disk_size) + ":" + 
-        		SystemInfo.getAvailableInternalDiskSize() / 1024 / 1024 + " MB " + 
+        		SystemInfo.getAvailableDiskSize() / 1024 / 1024 + " MB " + 
         		getResources().getString(R.string.available)+ " - " + getResources().getString(R.string.total) + " " +
-        		SystemInfo.getTotalInternalDiskSize() / 1024 / 1024 + " MB ");
+        		SystemInfo.getTotalDiskSize() / 1024 / 1024 + " MB ");
         showInformation.setText(getResources().getString(R.string.partitions) + ":" + 
         		"\n" + SystemInfo.getPartitions());
         
@@ -133,15 +138,15 @@ public class MainActivity extends Activity {
 		switch (arg1) {
 		case R.id.radioButton1: //Internal Disk
 			showView.setText("Test on Internal Disk");
-			DiskTestApplication.isInternalDisk(true);
+			DiskTestApplication.selectInternalDisk(true);
 			break;
 		case R.id.radioButton2: //External Disk
 			if (SystemInfo.externalMemoryAvailable()) {
 				showView.setText("Test on External Disk");
-				DiskTestApplication.isInternalDisk(false);
+				DiskTestApplication.selectInternalDisk(false);
 			} else {
 				showView.setText("Warning: Not found External Disk!");
-				DiskTestApplication.isInternalDisk(true);
+				DiskTestApplication.selectInternalDisk(true);
 				arg0.check(R.id.radioButton1);
 			}
 			break;

@@ -7,8 +7,7 @@ import android.content.Context;
 import android.os.Environment;
 
 public class DiskTestApplication extends Application{
-	private static final boolean selectInternalDisk = true;
-	private static boolean isInternalDisk;
+	private static boolean internalDiskSelected = true; //default select internal disk.
 	
 	private static Context context;
 	/*
@@ -42,11 +41,14 @@ public class DiskTestApplication extends Application{
 	}
 	
 	public static boolean getInternalDiskSelectState() {
-		return selectInternalDisk;
+		return internalDiskSelected;
 	}
 	
-	public static void isInternalDisk(boolean b) {
-		isInternalDisk = b;
+	public static void selectInternalDisk(boolean b) {
+		if (!b && !SystemInfo.externalMemoryAvailable())
+			internalDiskSelected = !b;
+		else 
+			internalDiskSelected = b;
 	}
 	
 	public static Context getContext() {
@@ -54,7 +56,7 @@ public class DiskTestApplication extends Application{
 	}
 	
 	public static String getTestPath() {
-		if (!isInternalDisk && SystemInfo.externalMemoryAvailable()) 
+		if (!internalDiskSelected && SystemInfo.externalMemoryAvailable()) 
 			testPath = Environment.getExternalStorageDirectory() + File.separator + "DiskTest";
 		else 
 			testPath = context.getFilesDir() + File.separator + "DiskTest";
@@ -62,7 +64,7 @@ public class DiskTestApplication extends Application{
 	}
 	
 	public static String getResultPath() {
-		if (!isInternalDisk && SystemInfo.externalMemoryAvailable())
+		if (!internalDiskSelected && SystemInfo.externalMemoryAvailable())
 			resultPath = Environment.getExternalStorageDirectory() + File.separator + "DiskTest";
 		else 
 			resultPath = context.getFilesDir() + File.separator + "DiskTest";
