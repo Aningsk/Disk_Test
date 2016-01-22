@@ -39,7 +39,6 @@ public class FileOperation {
 }
 
 class writeOperation extends FileOperation{
-	
 	public Result writeFile(int filesize) {
 		Random random = new Random();
 		File saveFile = new File(testPath + testFile);
