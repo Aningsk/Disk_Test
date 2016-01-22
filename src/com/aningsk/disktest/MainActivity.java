@@ -70,6 +70,10 @@ public class MainActivity extends Activity {
 				if (!lockRadioGroup) {
 					changeSelectDisk(arg0, arg1);
 					selectedRadioButton = arg1;
+					showInformation.setText(getResources().getString(R.string.partitions) + ":" + 
+			        		"\n" + SystemInfo.getPartitions());
+					reslutButton.setText(R.string.result_button);
+					inforFlag = true;
 				} else {
 					showView.setText("Test is running. Don't change it!");
 					selectDisk.check(selectedRadioButton);
