@@ -61,13 +61,11 @@ public class MainActivity extends Activity {
         selectDisk.check(selectedRadioButton);
         
         selectDisk.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-
 			@Override
 			public void onCheckedChanged(RadioGroup arg0, int arg1) {
 				// TODO Auto-generated method stub
 				if (!lockRadioGroup) {
 					changeSelectDisk(arg0, arg1);
-					selectedRadioButton = arg1;
 					
 					showDiskSize.setText(getResources().getString(R.string.disk_size) + ":" + 
 			        		SystemInfo.getAvailableDiskSize() / 1024 / 1024 + " MB " + 
@@ -82,7 +80,6 @@ public class MainActivity extends Activity {
 					selectDisk.check(selectedRadioButton);
 				}
 			}
-        	
         });
         startButton.setOnClickListener(new OnClickListener() {
 			@Override
@@ -133,15 +130,18 @@ public class MainActivity extends Activity {
     public void changeSelectDisk(RadioGroup arg0, int arg1) {
 		switch (arg1) {
 		case R.id.radioButton1: //Internal Disk
-			showView.setText(R.string.test_on_inter);
 			DiskTestApplication.selectInternalDisk(true);
+			selectedRadioButton = R.id.radioButton1;
+			showView.setText(R.string.test_on_inter);
 			break;
 		case R.id.radioButton2: //External Disk
 			if (SystemInfo.externalMemoryAvailable()) {
-				showView.setText(R.string.test_on_exter);
 				DiskTestApplication.selectInternalDisk(false);
+				selectedRadioButton = R.id.radioButton2;
+				showView.setText(R.string.test_on_exter);
 			} else {
 				DiskTestApplication.selectInternalDisk(true);
+				selectedRadioButton = R.id.radioButton1;
 				arg0.check(R.id.radioButton1);
 				showView.setText(R.string.cannot_change);
 			}
