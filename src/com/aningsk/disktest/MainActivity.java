@@ -141,9 +141,9 @@ public class MainActivity extends Activity {
 				showView.setText(R.string.test_on_exter);
 				DiskTestApplication.selectInternalDisk(false);
 			} else {
-				showView.setText(R.string.cannot_change);
 				DiskTestApplication.selectInternalDisk(true);
 				arg0.check(R.id.radioButton1);
+				showView.setText(R.string.cannot_change);
 			}
 			break;
 		}
