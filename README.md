@@ -1,4 +1,4 @@
-#Disk Test (Version 1.6) 
+#Disk Test (Version 1.6.1) 
 This Android APP is use to test your device's SD/eMMC.   
 Developed by Aningsk, and comply with Apache License Version 2.0
 
@@ -13,7 +13,8 @@ TempFile.txt . APP can check the MD5 of these two file are the same value or not
 speed of read/write. And repeat 5 times. User can see the result by clicking "Result" button.
 
 I use ADT(eclipse) to develop this project. I cannot get Android Studio.  
-And run it on Android-4.4.2 and Android-4.4.3 (I don't test it on other Android versions.)
+And run it on Android-4.4.2 (I don't test it on other Android versions.), 
+I considered much older Android such as 4.2.2, but Android-4.4 is my target device.
 
 * Android Developer Tools  
     Build:v22.6.2-1085508  
@@ -21,7 +22,12 @@ And run it on Android-4.4.2 and Android-4.4.3 (I don't test it on other Android 
 That is very very difficult to get develop tools or support libraries, since Google had been **GFWed**... 
 I'm a Chinese newbie programmer without any VPN @\_@
 
+***
 ##Version Mark 
+* v1.6.1 (2016-01-25)   
+    Fixed some issue when device without SD card:   
+    1 ShowView don't show correct information. FIXED   
+    2 RadioGroup can select one that shouldn't be selected. FIXED  
 * v1.6 (2016-01-22)   
     Support that take test on internal disk or external disk.
 * v1.5.1 (2016-01-22)   
