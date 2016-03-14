@@ -117,16 +117,16 @@ class writeOperation extends FileOperation {
 
 class readOperation extends FileOperation { 
 	
-	public Result readFile(String filePath) {
+	public Result readFile(String fromPath, String toPath) {
 		File saveFile;
 		File tempFile;
 		char[] readBuffer = new char[unit];
 		int filesize = 0;
 		int n = 0;
 		
-		if (null != filePath) {
-			saveFile = new File(filePath + testFile);
-			tempFile = new File(filePath + File.separator + DiskTestApplication.getTempFileName());
+		if (null != fromPath && null != toPath) {
+			saveFile = new File(fromPath + testFile);
+			tempFile = new File(toPath + File.separator + DiskTestApplication.getTempFileName());
 		} else {
 			return result;
 		}

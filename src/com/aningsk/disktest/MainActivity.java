@@ -146,6 +146,18 @@ public class MainActivity extends Activity {
 				showView.setText(R.string.cannot_change);
 			}
 			break;
+		case R.id.radioButton3: //Cross Test
+			if (SystemInfo.externalMemoryAvailable()) {
+				DiskTestApplication.selectCrossTest(true);
+				selectedRadioButton = R.id.radioButton3;
+				showView.setText(R.string.test_on_both);
+			}else {
+				DiskTestApplication.selectInternalDisk(true);
+				selectedRadioButton = R.id.radioButton1;
+				arg0.check(R.id.radioButton1);
+				showView.setText(R.string.cannot_change);
+			}
+			break;
 		}
     }
     

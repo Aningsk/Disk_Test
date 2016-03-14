@@ -7,6 +7,7 @@ import java.text.DecimalFormat;
 
 import android.app.Service;
 import android.content.Intent;
+import android.os.Environment;
 import android.os.IBinder;
 import android.util.Log;
 
@@ -41,9 +42,6 @@ public class TestService extends Service implements Runnable {
 	
 	public void onCreate() {
 		super.onCreate();
-		File folder = new File(resultPath);
-		if (!folder.exists())
-			folder.mkdir();
 		testThread = new Thread(this);
 	}
 	
@@ -51,6 +49,11 @@ public class TestService extends Service implements Runnable {
 	public void run() {
 		resultPath = DiskTestApplication.getResultPath();
 		resultName = File.separator + DiskTestApplication.getResultFileName();
+		
+		File folder = new File(resultPath);
+		if (!folder.exists())
+			folder.mkdir();
+		
 		try {
 			runService();
 		} catch (IOException e) {
@@ -77,7 +80,10 @@ public class TestService extends Service implements Runnable {
 		if (runFlag) {
 			if (debug)Log.i(DEBUG, "quantity:" + QUANTITY);
 			for (int s = 0; s < QUANTITY && runFlag; s++) { 
-				while (count < COUNT && runFlag) {
+				
+				int testCount = DiskTestApplication.getTakeCrossTestSelectState() ? 2 * COUNT : COUNT;
+				
+				while (count < testCount && runFlag) {
 					filesize = testsize[s]; 
 					
 					if (count == 0) {
@@ -91,7 +97,17 @@ public class TestService extends Service implements Runnable {
 					//write the file that size is file size.
 					writeOperation writeFileOperation = new writeOperation();
 					Result.md5Cksum = null;
-					writeFileOperation.result = writeFileOperation.writeFile(filesize);
+					
+					if (DiskTestApplication.getTakeCrossTestSelectState())
+						if (testCount % 2 == 1)
+							writeFileOperation.result = writeFileOperation.writeFile(
+									Environment.getExternalStorageDirectory() + File.separator + "DiskTest", filesize);
+						else 
+							writeFileOperation.result = writeFileOperation.writeFile(
+									DiskTestApplication.getContext().getFilesDir() + File.separator + "DiskTest", filesize);
+					else 
+						writeFileOperation.result = writeFileOperation.writeFile(filesize);
+					
 					w_md5Cksum = Result.md5Cksum;
 					Result.w_speed = (double)Math.round(Result.w_speed * 1000000) / 1000000.0;
 					if (debug)Log.i(DEBUG, "w_speed:" + df.format(Result.w_speed) + " md5cksum:" + Result.md5Cksum);
@@ -99,7 +115,19 @@ public class TestService extends Service implements Runnable {
 					//read the file that size is file size.
 					readOperation readFileOperation = new readOperation();
 					Result.md5Cksum = null;
-					readFileOperation.result = readFileOperation.readFile();
+					
+					if (DiskTestApplication.getTakeCrossTestSelectState()) 
+						if (testCount % 2 == 1) 
+							readFileOperation.result = readFileOperation.readFile(
+									Environment.getExternalStorageDirectory() + File.separator + "DiskTest", 
+									DiskTestApplication.getContext().getFilesDir() + File.separator + "DiskTest");
+						else 
+							readFileOperation.result = readFileOperation.readFile(
+									DiskTestApplication.getContext().getFilesDir() + File.separator + "DiskTest", 
+									Environment.getExternalStorageDirectory() + File.separator + "DiskTest");
+					else 
+						readFileOperation.result = readFileOperation.readFile();
+					
 					r_md5Cksum = Result.md5Cksum;
 					Result.r_speed = (double)Math.round(Result.r_speed * 1000000) / 1000000.0;
 					if (debug)Log.i(DEBUG, "r_speed:" + df.format(Result.r_speed) + " md5cksum:" + Result.md5Cksum);
