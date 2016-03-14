@@ -8,6 +8,7 @@ import android.os.Environment;
 
 public class DiskTestApplication extends Application{
 	private static boolean internalDiskSelected = true; //default select internal disk.
+	private static boolean takeCrossTestSelected = false;
 	
 	private static Context context;
 
@@ -37,10 +38,23 @@ public class DiskTestApplication extends Application{
 	}
 	
 	public static void selectInternalDisk(boolean b) {
-		if (!b && !SystemInfo.externalMemoryAvailable())
+		if (!b && !SystemInfo.externalMemoryAvailable()) 
 			internalDiskSelected = !b;
 		else 
 			internalDiskSelected = b;
+		takeCrossTestSelected = false;
+	}
+	
+	public static boolean getTakeCrossTestSelectState() {
+		return takeCrossTestSelected;
+	}
+	
+	public static void selectCrossTest(boolean b) {
+		selectInternalDisk(b);
+		if (!b && !SystemInfo.externalMemoryAvailable())
+			takeCrossTestSelected = !b;
+		else 
+			takeCrossTestSelected = b;
 	}
 	
 	public static Context getContext() {
@@ -56,7 +70,7 @@ public class DiskTestApplication extends Application{
 	}
 	
 	public static String getResultPath() {
-		if (!internalDiskSelected && SystemInfo.externalMemoryAvailable())
+		if (!internalDiskSelected && !takeCrossTestSelected && SystemInfo.externalMemoryAvailable())
 			resultPath = Environment.getExternalStorageDirectory() + File.separator + "DiskTest";
 		else 
 			resultPath = context.getFilesDir() + File.separator + "DiskTest";
