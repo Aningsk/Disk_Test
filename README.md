@@ -1,4 +1,4 @@
-#Disk Test (Version 1.6.1) 
+#Disk Test (Version 2.0) 
 This Android APP is use to test your device's SD/eMMC.   
 Developed by Aningsk, and comply with Apache License Version 2.0
 
@@ -24,6 +24,17 @@ I'm a Chinese newbie programmer without any VPN @\_@
 
 ***
 ##Version Mark 
+* v2.0 (2016-03-14)  
+    Add cross test function. I don't like this function. But leader likes it.   
+    I think that cross test is not necessary while we have the eMMC and SD card 
+    read/write tests.  
+    Well I realized the function, just as I can.  
+    The result showed by the APP in cross test is different:  
+    I don't take care of average speed of this funtion; but I mark the direction 
+    of read/write - E->I means the file was created on external disk and copy to 
+    internal disk. I->E is similar.  
+    I also don't show DiskSize in crose test.  
+    I suggest you'd better use the v1.6.1 though it's old with more bugs probably.  
 * v1.6.1 (2016-01-25)   
     Fixed some issue when device without SD card:   
     1 ShowView don't show correct information. FIXED   
