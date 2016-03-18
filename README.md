@@ -1,4 +1,4 @@
-#Disk Test (Version 2.0) 
+#Disk Test (Version 2.0.1) 
 This Android APP is use to test your device's SD/eMMC.   
 Developed by Aningsk, and comply with Apache License Version 2.0
 
@@ -24,6 +24,8 @@ I'm a Chinese newbie programmer without any VPN @\_@
 
 ***
 ##Version Mark 
+* v2.0.1 (2016-03-18)   
+    Fixed sometimes cannot show the highest order number of RAM size.  
 * v2.0 (2016-03-14)  
     Add cross test function. I don't like this function. But leader likes it.   
     I think that cross test is not necessary while we have the eMMC and SD card 
