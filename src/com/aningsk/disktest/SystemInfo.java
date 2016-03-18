@@ -16,8 +16,8 @@ public class SystemInfo {
 	
 	private static final String getRamSizeCmd = "cat /proc/meminfo";
 	private static final String getPartitionsCmd = "cat /proc/partitions";
-	private static final String indexOfMemtotal = "Memtotal:         "; //there are 9 blanks
-		
+	private static final String indexOfMemtotal = "Memtotal:        "; //there are 8 blanks
+	
 	public static String getPartitions() {
 		partitions = cleanString(doExec(getPartitionsCmd), getPartitionsCmd, true);
 		return partitions;
