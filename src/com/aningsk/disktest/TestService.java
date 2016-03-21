@@ -26,9 +26,9 @@ public class TestService extends Service implements Runnable {
 	
 	private static int[] testsize = {16, 32, 64, 128, 256, 512, 1024,
 		16*1024, 32*1024, 64*1024, 128*1024, 256*1024, 512*1024, 1024*1024};
-//	private static int QUANTITY = testsize.length;
-	private static int QUANTITY = 2;
-	private static int COUNT = 5;
+	private static int QUANTITY = testsize.length;
+//	private static int QUANTITY = 2;
+	private static int COUNT = 10;
 	private static double avrSpeed_w = 0;
 	private static double avrSpeed_r = 0;
 	private static String w_md5Cksum;
