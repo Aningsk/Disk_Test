@@ -5,9 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.util.Random;
-
-import org.apache.commons.codec.binary.Hex;
-import org.apache.commons.codec.digest.DigestUtils;
+import java.util.zip.CRC32;
 
 import android.util.Log;
 
@@ -35,12 +33,14 @@ public class FileOperation {
 	protected static class Result {
 		protected static Double w_speed = Double.valueOf(0);
 		protected static Double r_speed = Double.valueOf(0);
-		protected static String md5Cksum;
+		protected static CRC32 crc32 = new CRC32();
+		//protected static String md5Cksum;
 	}
 }
 
 class writeOperation extends FileOperation { 
 	
+	@SuppressWarnings("resource")
 	public Result writeFile(String filePath, int filesize) {
 		Random random = new Random();
 		File saveFile;
@@ -69,7 +69,8 @@ class writeOperation extends FileOperation {
 			}
 
 			fileWriter.close();
-			Result.md5Cksum = new String(Hex.encodeHex(DigestUtils.md5(new FileInputStream(saveFile))));
+			//Result.md5Cksum = new String(Hex.encodeHex(DigestUtils.md5(new FileInputStream(saveFile))));
+			Result.crc32.update((new FileInputStream(saveFile)).read());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -80,6 +81,7 @@ class writeOperation extends FileOperation {
 		return result;
 	}
 	
+	@SuppressWarnings("resource")
 	public Result writeFile(int filesize) {
 		Random random = new Random();
 		File saveFile = new File(testPath + testFile);
@@ -103,7 +105,8 @@ class writeOperation extends FileOperation {
 			}
 
 			fileWriter.close();
-			Result.md5Cksum = new String(Hex.encodeHex(DigestUtils.md5(new FileInputStream(saveFile))));
+			//Result.md5Cksum = new String(Hex.encodeHex(DigestUtils.md5(new FileInputStream(saveFile))));
+			Result.crc32.update((new FileInputStream(saveFile)).read());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -117,6 +120,7 @@ class writeOperation extends FileOperation {
 
 class readOperation extends FileOperation { 
 	
+	@SuppressWarnings("resource")
 	public Result readFile(String fromPath, String toPath) {
 		File saveFile;
 		File tempFile;
@@ -151,7 +155,8 @@ class readOperation extends FileOperation {
 			
 			fileReader.close();
 			fileWriter.close();
-			Result.md5Cksum = new String(Hex.encodeHex(DigestUtils.md5(new FileInputStream(tempFile))));
+			//Result.md5Cksum = new String(Hex.encodeHex(DigestUtils.md5(new FileInputStream(tempFile))));
+			Result.crc32.update((new FileInputStream(tempFile)).read());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -162,6 +167,7 @@ class readOperation extends FileOperation {
 		return result;
 	}
 	
+	@SuppressWarnings("resource")
 	public Result readFile() {
 		File saveFile = new File(testPath + testFile);
 		File tempFile = new File(testPath + File.separator + DiskTestApplication.getTempFileName());
@@ -189,7 +195,8 @@ class readOperation extends FileOperation {
 			
 			fileReader.close();
 			fileWriter.close();
-			Result.md5Cksum = new String(Hex.encodeHex(DigestUtils.md5(new FileInputStream(tempFile))));
+			//Result.md5Cksum = new String(Hex.encodeHex(DigestUtils.md5(new FileInputStream(tempFile))));
+			Result.crc32.update((new FileInputStream(tempFile)).read());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

@@ -24,15 +24,18 @@ public class TestService extends Service implements Runnable {
 	private static String resultPath = DiskTestApplication.getResultPath();
 	private static String resultName = File.separator + DiskTestApplication.getResultFileName();
 	
-	private static int[] testsize = {16, 32, 64, 128, 256, 512, 1024,
-		16*1024, 32*1024, 64*1024, 128*1024, 256*1024, 512*1024, 1024*1024};
+//	private static int[] testsize = {16, 32, 64, 128, 256, 512, 1024,
+//		16*1024, 32*1024, 64*1024, 128*1024, 256*1024, 512*1024, 1024*1024};
+	private static int[] testsize = {16, 32, 64, 128, 256, 512, 1024};
 	private static int QUANTITY = testsize.length;
 //	private static int QUANTITY = 2;
-	private static int COUNT = 10;
+	private static int COUNT = 5;
 	private static double avrSpeed_w = 0;
 	private static double avrSpeed_r = 0;
-	private static String w_md5Cksum;
-	private static String r_md5Cksum;
+	//private static String w_md5Cksum;
+	//private static String r_md5Cksum;
+	private static long w_crc32;
+	private static long r_crc32;
 	private static int ckfailcount = 0;
 	
 	private static boolean runFlag = true;
@@ -75,7 +78,6 @@ public class TestService extends Service implements Runnable {
 			resultFile.delete();
 		
 		FileWriter resultWriter = null;
-        resultWriter = new FileWriter(resultFile, true);
         
 		if (runFlag) {
 			if (debug)Log.i(DEBUG, "quantity:" + QUANTITY);
@@ -85,6 +87,7 @@ public class TestService extends Service implements Runnable {
 				
 				while (count < testCount && runFlag) {
 					filesize = testsize[s]; 
+					resultWriter = new FileWriter(resultFile, true);
 					
 					if (count == 0) {
 						resultWriter.write(("This is the test of " + filesize + "KB.\n"));
@@ -96,7 +99,7 @@ public class TestService extends Service implements Runnable {
 					
 					//write the file that size is file size.
 					writeOperation writeFileOperation = new writeOperation();
-					Result.md5Cksum = null;
+					Result.crc32.reset();
 					
 					if (DiskTestApplication.getTakeCrossTestSelectState())
 						if (count % 2 == 1)
@@ -108,13 +111,16 @@ public class TestService extends Service implements Runnable {
 					else 
 						writeFileOperation.result = writeFileOperation.writeFile(filesize);
 					
-					w_md5Cksum = Result.md5Cksum;
+					w_crc32 = Result.crc32.getValue();
+
 					Result.w_speed = (double)Math.round(Result.w_speed * 1000000) / 1000000.0;
-					if (debug)Log.i(DEBUG, "w_speed:" + df.format(Result.w_speed) + " md5cksum:" + Result.md5Cksum);
+					//if (debug)Log.i(DEBUG, "w_speed:" + df.format(Result.w_speed) + " md5cksum:" + Result.md5Cksum);
+					if (debug)Log.i(DEBUG, "w_speed:" + df.format(Result.w_speed) + " crc32:" + w_crc32);
 					
 					//read the file that size is file size.
 					readOperation readFileOperation = new readOperation();
-					Result.md5Cksum = null;
+
+					Result.crc32.reset();
 					
 					if (DiskTestApplication.getTakeCrossTestSelectState()) 
 						if (count % 2 == 1) 
@@ -128,16 +134,18 @@ public class TestService extends Service implements Runnable {
 					else 
 						readFileOperation.result = readFileOperation.readFile();
 					
-					r_md5Cksum = Result.md5Cksum;
+					r_crc32 = Result.crc32.getValue();
+
 					Result.r_speed = (double)Math.round(Result.r_speed * 1000000) / 1000000.0;
-					if (debug)Log.i(DEBUG, "r_speed:" + df.format(Result.r_speed) + " md5cksum:" + Result.md5Cksum);
+					//if (debug)Log.i(DEBUG, "r_speed:" + df.format(Result.r_speed) + " md5cksum:" + Result.md5Cksum);
+					if (debug)Log.i(DEBUG, "r_speed:" + df.format(Result.r_speed) + " crc32:" + r_crc32);
 					
 					resultWriter.write(df.format(Result.w_speed).toString());
 					resultWriter.write("\t");
 					resultWriter.write(df.format(Result.r_speed).toString());
 					resultWriter.write("\t");
 					
-					if (r_md5Cksum.equals(w_md5Cksum)) {
+					if (r_crc32 == w_crc32) {
 						resultWriter.write("success\t");
 						avrSpeed_w += Result.w_speed;
 						avrSpeed_r += Result.r_speed;
@@ -154,10 +162,12 @@ public class TestService extends Service implements Runnable {
 							resultWriter.write("I->E");
 					resultWriter.write("\n");
 					count++;
+					resultWriter.close();
 				}
 				
 				//One kind size test is end, now should get average speed.
 				//If we take a cross test, we dont't need average speed.
+				resultWriter = new FileWriter(resultFile, true);
 				if (!DiskTestApplication.getTakeCrossTestSelectState()) {
 					avrSpeed_w = avrSpeed_w / (count - ckfailcount);
 					avrSpeed_r = avrSpeed_r / (count - ckfailcount);
@@ -173,10 +183,10 @@ public class TestService extends Service implements Runnable {
 				avrSpeed_w = 0;
 				avrSpeed_r = 0;
 				count = 0;
+				resultWriter.close();
 			} 
 			//All kinds size test is end.
 		}
-		resultWriter.close();
 		
 		if (completeFlag) {
 			Intent testEnd = new Intent("TestEnd");
