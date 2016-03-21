@@ -23,10 +23,11 @@ public class TestService extends Service implements Runnable {
 	private static String resultPath = DiskTestApplication.getResultPath();
 	private static String resultName = File.separator + DiskTestApplication.getResultFileName();
 	
-	private static int[] testsize = {16, 32, 64, 128, 256, 512, 1024,
-		16*1024, 32*1024, 64*1024, 128*1024, 256*1024, 512*1024, 1024*1024};
-//	private static int QUANTITY = testsize.length;
-	private static int QUANTITY = 2;
+//	private static int[] testsize = {16, 32, 64, 128, 256, 512, 1024,
+//		16*1024, 32*1024, 64*1024, 128*1024, 256*1024, 512*1024, 1024*1024};
+	private static int[] testsize = {16*1024, 32*1024, 64*1024, 128*1024, 256*1024, 512*1024, 1024*1024};
+	private static int QUANTITY = testsize.length;
+//	private static int QUANTITY = 2;
 	private static int COUNT = 5;
 	private static double avrSpeed_w = 0;
 	private static double avrSpeed_r = 0;
@@ -72,13 +73,13 @@ public class TestService extends Service implements Runnable {
 			resultFile.delete();
 		
 		FileWriter resultWriter = null;
-        resultWriter = new FileWriter(resultFile, true);
         
 		if (runFlag) {
 			if (debug)Log.i(DEBUG, "quantity:" + QUANTITY);
 			for (int s = 0; s < QUANTITY && runFlag; s++) { 
 				while (count < COUNT && runFlag) {
 					filesize = testsize[s]; 
+					resultWriter = new FileWriter(resultFile, true);
 					
 					if (count == 0) {
 						resultWriter.write(("This is the test of " + filesize + "KB.\n"));
@@ -118,9 +119,11 @@ public class TestService extends Service implements Runnable {
 						ckfailcount++;
 					}
 					count++;
+					resultWriter.close();
 				}
 				
 				//One kind size test is end, now should get average speed.
+				resultWriter = new FileWriter(resultFile, true);
 				avrSpeed_w = avrSpeed_w / (count - ckfailcount);
 				avrSpeed_r = avrSpeed_r / (count - ckfailcount);
 				avrSpeed_w = (double)Math.round(avrSpeed_w * 1000000) / 1000000.0;
@@ -133,10 +136,10 @@ public class TestService extends Service implements Runnable {
 				avrSpeed_w = 0;
 				avrSpeed_r = 0;
 				count = 0;
+				resultWriter.close();
 			} 
 			//All kinds size test is end.
 		}
-		resultWriter.close();
 		
 		if (completeFlag) {
 			Intent testEnd = new Intent("TestEnd");
