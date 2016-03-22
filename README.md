@@ -1,4 +1,4 @@
-#Disk Test (Version 2.9) 
+#Disk Test (Version 2.10) 
 This Android APP is use to test your device's SD/eMMC.   
 Developed by Aningsk, and comply with Apache License Version 2.0
 
@@ -25,6 +25,14 @@ I'm a Chinese newbie programmer without any VPN @\_@
 
 ***
 ##Version Mark 
+* v2.10 (2016-03-22)  
+    OK I had realized the function that should be in v3.0 which I predicted. But I don't use "v3.0" 
+    because it's not so cool for the "3.0". I don't change v2.9 versionCode just change the versionName 
+    to v2.10 so they are twins. 
+    This version APP will use 1KB buffer size to read/write a file. So it will be much slower than 
+    previous version.  
+    **NOTICE**: If you want take the test as fast as your device can, use v2.9 please. If you want test 
+    with invariable buffer size, use v2.10 please.  
 * v2.9 (2016-03-22) Major Upgrade   
     v1.6.1 have a BUG: It cannot test with large file. Now I had fixed it, and change a lot of code. 
     Yes, it's v2.9 near v3.0  

@@ -18,6 +18,7 @@ public class FileOperation {
 
 	protected static String string = DiskTestApplication.getTestData();
 	protected static int unit = DiskTestApplication.KB; //means KB
+	protected static int bufferSize = DiskTestApplication.buffer_1k;
 
 	protected Long startTime = Long.valueOf(0L);
 	protected Long endTime = Long.valueOf(0L);
@@ -45,6 +46,8 @@ public class FileOperation {
 	}
 	
 	FileOperation() {
+		DiskTestApplication.setBufferSize(DiskTestApplication.KB);
+		bufferSize = DiskTestApplication.getBufferSize();
 		testPath = DiskTestApplication.getTestPath();
 		testFile = DiskTestApplication.getTestFileName();
 		File folder = new File(testPath);
@@ -53,17 +56,11 @@ public class FileOperation {
 	}
 }
 
-/*
- * In writeOperation and readOperation, the buffer used to write/read 
- * on a file will be different size while use different unit.
- * That maybe cause different write/read speed.
- */
-
 class writeOperation extends FileOperation { 
 	
 	private Result __writeFile(File saveFile, int filesize) {
 		Random random = new Random();
-		char[] writeBuffer = new char[unit];
+		char[] writeBuffer = new char[bufferSize];
 		
 		if (saveFile.exists())
 			saveFile.delete();
@@ -71,19 +68,21 @@ class writeOperation extends FileOperation {
 			FileWriter fileWriter = new FileWriter(saveFile, true);
 			
 			for (int i = 0; i < filesize; i++) {
-				for (int j = 0; j < unit; j++) {
-					int number = random.nextInt(string.length());// [0,62)
-					writeBuffer[i] = string.charAt(number);
+				for (int j = 0; j < (unit >= bufferSize ? unit / bufferSize: unit); j++) {
+					for (int c = 0; c < (bufferSize < unit ? bufferSize : unit); c++) {
+						int number = random.nextInt(string.length());// [0,62)
+						writeBuffer[c] = string.charAt(number);
+					}
+					//when writeBuffer is full, we write it into file.
+					startTime = System.nanoTime();
+					fileWriter.write(writeBuffer);
+					endTime = System.nanoTime();
+					useTime = useTime + endTime - startTime;
+					Thread.sleep(5);
 				}
-				startTime = System.nanoTime();
-				fileWriter.write(writeBuffer);
-				endTime = System.nanoTime();
-				useTime = useTime + endTime - startTime;
-				Thread.sleep(50);
 			}
 
 			fileWriter.close();
-			Thread.sleep(50);
 			Result.updateCRC32(saveFile);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -115,7 +114,7 @@ class writeOperation extends FileOperation {
 class readOperation extends FileOperation { 
 	
 	private Result __readFile(File saveFile, File tempFile) {
-		char[] readBuffer = new char[unit];
+		char[] readBuffer = new char[bufferSize];
 		int filesize = 0;
 		int n = 0;
 		
@@ -132,14 +131,13 @@ class readOperation extends FileOperation {
 				if (n > 0) {
 					useTime = useTime + endTime - startTime;
 					filesize += n; //here unit is B.
-					Thread.sleep(50);
+					Thread.sleep(5);
 					fileWriter.write(readBuffer);
 				}
 			} while (n > 0);
 			
 			fileReader.close();
 			fileWriter.close();
-			Thread.sleep(50);
 			Result.updateCRC32(tempFile);
 		} catch (Exception e) {
 			e.printStackTrace();
