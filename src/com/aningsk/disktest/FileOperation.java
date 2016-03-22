@@ -18,6 +18,7 @@ public class FileOperation {
 
 	protected static String string = DiskTestApplication.getTestData();
 	protected static int unit = DiskTestApplication.KB; //means KB
+	protected static int bufferSize = DiskTestApplication.buffer_1k;
 
 	protected Long startTime = Long.valueOf(0L);
 	protected Long endTime = Long.valueOf(0L);
@@ -45,6 +46,8 @@ public class FileOperation {
 	}
 	
 	FileOperation() {
+		DiskTestApplication.setBufferSize(DiskTestApplication.KB);
+		bufferSize = DiskTestApplication.getBufferSize();
 		testPath = DiskTestApplication.getTestPath();
 		testFile = DiskTestApplication.getTestFileName();
 		File folder = new File(testPath);
@@ -57,8 +60,7 @@ class writeOperation extends FileOperation {
 	
 	private Result __writeFile(File saveFile, int filesize) {
 		Random random = new Random();
-		int buffSize = DiskTestApplication.buffer_1k;
-		char[] writeBuffer = new char[buffSize];
+		char[] writeBuffer = new char[bufferSize];
 		
 		if (saveFile.exists())
 			saveFile.delete();
@@ -66,8 +68,8 @@ class writeOperation extends FileOperation {
 			FileWriter fileWriter = new FileWriter(saveFile, true);
 			
 			for (int i = 0; i < filesize; i++) {
-				for (int j = 0; j < (unit >= buffSize ? unit / buffSize: unit); j++) {
-					for (int c = 0; c < (buffSize < unit ? buffSize : unit); c++) {
+				for (int j = 0; j < (unit >= bufferSize ? unit / bufferSize: unit); j++) {
+					for (int c = 0; c < (bufferSize < unit ? bufferSize : unit); c++) {
 						int number = random.nextInt(string.length());// [0,62)
 						writeBuffer[c] = string.charAt(number);
 					}
@@ -112,8 +114,7 @@ class writeOperation extends FileOperation {
 class readOperation extends FileOperation { 
 	
 	private Result __readFile(File saveFile, File tempFile) {
-		int buffSize = DiskTestApplication.buffer_1k;
-		char[] readBuffer = new char[buffSize];
+		char[] readBuffer = new char[bufferSize];
 		int filesize = 0;
 		int n = 0;
 		

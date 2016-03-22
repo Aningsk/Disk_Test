@@ -21,6 +21,8 @@ public class DiskTestApplication extends Application{
 	
 	private static String testData;
 	
+	private static int bufferSize;
+	
 	public static final int KB = 1024;
 	public static final int MB = 1024 * 1024;
 	public static final int[] UNIT = {KB, MB, 0};//Must end with 0.
@@ -39,6 +41,8 @@ public class DiskTestApplication extends Application{
 		tempFileName = "TempFile.txt";
 		resultFileName = "TestResult.txt";
 		testData = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+		
+		bufferSize = buffer_1k;
 	}
 	
 	public static boolean getInternalDiskSelectState() {
@@ -99,5 +103,19 @@ public class DiskTestApplication extends Application{
 	
 	public static String getTestData() {
 		return testData;
+	}
+	
+	public static int setBufferSize(int size) {
+		int i = 0;
+		for (i = 0; i < BUFFER.length - 1; i++) 
+			if (size == BUFFER[i]) {
+				bufferSize = size;
+				return bufferSize;
+			}
+		return -1;
+	}
+	
+	public static int getBufferSize() {
+		return bufferSize;
 	}
 }
