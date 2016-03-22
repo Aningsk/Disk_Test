@@ -84,6 +84,7 @@ class writeOperation extends FileOperation {
 
 			fileWriter.close();
 			//Result.crc32.update((new FileInputStream(saveFile)).read());
+			Thread.sleep(50);
 			Result.updateCRC32(saveFile);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -119,14 +120,13 @@ class writeOperation extends FileOperation {
 
 			fileWriter.close();
 			//Result.crc32.update((new FileInputStream(saveFile)).read());
+			Thread.sleep(50);
 			Result.updateCRC32(saveFile);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
 		if (debug)Log.i("DEBUG", "write useTime " + useTime + "ns.");
-		if (debug)Log.i("DEBUG-NEW", "filesize: " + (double)filesize * unit / 1024);
-		if (debug)Log.i("DEBUG-NEW", "unit: " + unit);
 		Result.w_speed = (double)filesize * unit / 1024 / (double)useTime; //KB/ns
 		Result.w_speed = Result.w_speed / 1024 * 1000000000; //MB/s
 		return result;
@@ -170,6 +170,7 @@ class readOperation extends FileOperation {
 			fileReader.close();
 			fileWriter.close();
 			//Result.crc32.update((new FileInputStream(tempFile)).read());
+			Thread.sleep(50);
 			Result.updateCRC32(tempFile);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -209,6 +210,7 @@ class readOperation extends FileOperation {
 			fileReader.close();
 			fileWriter.close();
 			//Result.crc32.update((new FileInputStream(tempFile)).read());
+			Thread.sleep(50);
 			Result.updateCRC32(tempFile);
 		} catch (Exception e) {
 			e.printStackTrace();
