@@ -67,10 +67,13 @@ public class MainActivity extends Activity {
 				if (!lockRadioGroup) {
 					changeSelectDisk(arg0, arg1);
 					
-					showDiskSize.setText(getResources().getString(R.string.disk_size) + ":" + 
-			        		SystemInfo.getAvailableDiskSize() / 1024 / 1024 + " MB " + 
-			        		getResources().getString(R.string.available)+ " - " + getResources().getString(R.string.total) + " " +
-			        		SystemInfo.getTotalDiskSize() / 1024 / 1024 + " MB ");
+					if (DiskTestApplication.getTakeCrossTestSelectState()) 
+						showDiskSize.setText("");
+					else
+						showDiskSize.setText(getResources().getString(R.string.disk_size) + ":" + 
+				        		SystemInfo.getAvailableDiskSize() / 1024 / 1024 + " MB " + 
+				        		getResources().getString(R.string.available)+ " - " + getResources().getString(R.string.total) + " " +
+				        		SystemInfo.getTotalDiskSize() / 1024 / 1024 + " MB ");
 					showInformation.setText(getResources().getString(R.string.partitions) + ":" + 
 			        		"\n" + SystemInfo.getPartitions());
 					reslutButton.setText(R.string.result_button);
@@ -140,6 +143,18 @@ public class MainActivity extends Activity {
 				selectedRadioButton = R.id.radioButton2;
 				showView.setText(R.string.test_on_exter);
 			} else {
+				DiskTestApplication.selectInternalDisk(true);
+				selectedRadioButton = R.id.radioButton1;
+				arg0.check(R.id.radioButton1);
+				showView.setText(R.string.cannot_change);
+			}
+			break;
+		case R.id.radioButton3: //Cross Test
+			if (SystemInfo.externalMemoryAvailable()) {
+				DiskTestApplication.selectCrossTest(true);
+				selectedRadioButton = R.id.radioButton3;
+				showView.setText(R.string.test_on_both);
+			}else {
 				DiskTestApplication.selectInternalDisk(true);
 				selectedRadioButton = R.id.radioButton1;
 				arg0.check(R.id.radioButton1);

@@ -4,10 +4,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Random;
-
-import org.apache.commons.codec.binary.Hex;
-import org.apache.commons.codec.digest.DigestUtils;
+import java.util.zip.CRC32;
 
 import android.util.Log;
 
@@ -18,34 +17,54 @@ public class FileOperation {
 	protected static String testFile;
 
 	protected static String string = DiskTestApplication.getTestData();
-	protected int unit = 1024; //means KB
+	protected static int unit = DiskTestApplication.KB; //means KB
 
 	protected Long startTime = Long.valueOf(0L);
 	protected Long endTime = Long.valueOf(0L);
 	protected Long useTime = Long.valueOf(0L);
-	
-	FileOperation() {
-		testPath = DiskTestApplication.getTestPath();
-		testFile = File.separator + DiskTestApplication.getTestFileName();
-		File folder = new File(testPath);
-		if (!folder.exists())
-			folder.mkdir();
-	}
+
 	protected Result result= new Result();
 	protected static class Result {
 		protected static Double w_speed = Double.valueOf(0);
 		protected static Double r_speed = Double.valueOf(0);
-		protected static String md5Cksum;
+		protected static CRC32 crc32 = new CRC32();
+		
+		protected static void updateCRC32(File file) throws IOException {
+			FileInputStream fi = new FileInputStream(file);
+			crc32.update(fi.read());
+			fi.close();
+		}
+	}
+	
+	public static void setUnit(int u) {
+		unit = u;
+	}
+	
+	public static int getUnit() {
+		return unit;
+	}
+	
+	FileOperation() {
+		testPath = DiskTestApplication.getTestPath();
+		testFile = DiskTestApplication.getTestFileName();
+		File folder = new File(testPath);
+		if (!folder.exists())
+			folder.mkdir();
 	}
 }
 
+/*
+ * In writeOperation and readOperation, the buffer used to write/read 
+ * on a file will be different size while use different unit.
+ * That maybe cause different write/read speed.
+ */
+
 class writeOperation extends FileOperation { 
 	
-	public Result writeFile(int filesize) {
+	private Result __writeFile(File saveFile, int filesize) {
 		Random random = new Random();
-		File saveFile = new File(testPath + testFile);
 		char[] writeBuffer = new char[unit];
-
+		
 		if (saveFile.exists())
 			saveFile.delete();
 		try {
@@ -64,23 +83,38 @@ class writeOperation extends FileOperation {
 			}
 
 			fileWriter.close();
-			Result.md5Cksum = new String(Hex.encodeHex(DigestUtils.md5(new FileInputStream(saveFile))));
+			Thread.sleep(50);
+			Result.updateCRC32(saveFile);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
 		if (debug)Log.i("DEBUG", "write useTime " + useTime + "ns.");
-		Result.w_speed = (double)filesize / (double)useTime; //KB/ns
+		Result.w_speed = (double)filesize * unit / 1024 / (double)useTime; //KB/ns
 		Result.w_speed = Result.w_speed / 1024 * 1000000000; //MB/s
 		return result;
+	}
+	
+	public Result writeFile(String filePath, int filesize) {
+		File saveFile;
+		
+		if (null != filePath)
+			saveFile = new File(filePath + testFile);
+		else
+			return result;
+		
+		return __writeFile(saveFile, filesize);
+	}
+	
+	public Result writeFile(int filesize) {
+		File saveFile = new File(testPath + testFile);
+		return __writeFile(saveFile, filesize);
 	}
 }
 
 class readOperation extends FileOperation { 
 	
-	public Result readFile() {
-		File saveFile = new File(testPath + testFile);
-		File tempFile = new File(testPath + File.separator + DiskTestApplication.getTempFileName());
+	private Result __readFile(File saveFile, File tempFile) {
 		char[] readBuffer = new char[unit];
 		int filesize = 0;
 		int n = 0;
@@ -105,7 +139,8 @@ class readOperation extends FileOperation {
 			
 			fileReader.close();
 			fileWriter.close();
-			Result.md5Cksum = new String(Hex.encodeHex(DigestUtils.md5(new FileInputStream(tempFile))));
+			Thread.sleep(50);
+			Result.updateCRC32(tempFile);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -114,5 +149,25 @@ class readOperation extends FileOperation {
 		Result.r_speed = (double)filesize / 1024 / (double)useTime; //KB/ns
 		Result.r_speed = Result.r_speed / 1024 * 1000000000; //MB/s
 		return result;
+	}
+	
+	public Result readFile(String fromPath, String toPath) {
+		File saveFile;
+		File tempFile;
+		
+		if (null != fromPath && null != toPath) {
+			saveFile = new File(fromPath + testFile);
+			tempFile = new File(toPath + DiskTestApplication.getTempFileName());
+		} else {
+			return result;
+		}
+		
+		return __readFile(saveFile, tempFile);
+	}
+	
+	public Result readFile() {
+		File saveFile = new File(testPath + testFile);
+		File tempFile = new File(testPath + DiskTestApplication.getTempFileName());
+		return __readFile(saveFile, tempFile);
 	}
 }
