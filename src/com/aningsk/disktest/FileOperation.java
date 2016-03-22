@@ -46,7 +46,7 @@ public class FileOperation {
 	
 	FileOperation() {
 		testPath = DiskTestApplication.getTestPath();
-		testFile = File.separator + DiskTestApplication.getTestFileName();
+		testFile = DiskTestApplication.getTestFileName();
 		File folder = new File(testPath);
 		if (!folder.exists())
 			folder.mkdir();
@@ -144,7 +144,7 @@ class readOperation extends FileOperation {
 		
 		if (null != fromPath && null != toPath) {
 			saveFile = new File(fromPath + testFile);
-			tempFile = new File(toPath + File.separator + DiskTestApplication.getTempFileName());
+			tempFile = new File(toPath + DiskTestApplication.getTempFileName());
 		} else {
 			return result;
 		}
@@ -183,7 +183,7 @@ class readOperation extends FileOperation {
 	
 	public Result readFile() {
 		File saveFile = new File(testPath + testFile);
-		File tempFile = new File(testPath + File.separator + DiskTestApplication.getTempFileName());
+		File tempFile = new File(testPath + DiskTestApplication.getTempFileName());
 		char[] readBuffer = new char[unit];
 		int filesize = 0;
 		int n = 0;

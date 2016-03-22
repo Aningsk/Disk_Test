@@ -49,7 +49,7 @@ public class TestService extends Service implements Runnable {
 	@Override
 	public void run() {
 		resultPath = DiskTestApplication.getResultPath();
-		resultName = File.separator + DiskTestApplication.getResultFileName();
+		resultName = DiskTestApplication.getResultFileName();
 		
 		File folder = new File(resultPath);
 		if (!folder.exists())
@@ -116,10 +116,10 @@ public class TestService extends Service implements Runnable {
 					if (DiskTestApplication.getTakeCrossTestSelectState())
 						if (count % 2 == 1)
 							writeFileOperation.result = writeFileOperation.writeFile(
-									Environment.getExternalStorageDirectory() + File.separator + "DiskTest", filesize);
+									Environment.getExternalStorageDirectory() + File.separator + "DiskTest" + File.separator, filesize);
 						else 
 							writeFileOperation.result = writeFileOperation.writeFile(
-									DiskTestApplication.getContext().getFilesDir() + File.separator + "DiskTest", filesize);
+									DiskTestApplication.getContext().getFilesDir() + File.separator + "DiskTest" + File.separator, filesize);
 					else 
 						writeFileOperation.result = writeFileOperation.writeFile(filesize);
 					
@@ -136,12 +136,12 @@ public class TestService extends Service implements Runnable {
 					if (DiskTestApplication.getTakeCrossTestSelectState()) 
 						if (count % 2 == 1) 
 							readFileOperation.result = readFileOperation.readFile(
-									Environment.getExternalStorageDirectory() + File.separator + "DiskTest", 
-									DiskTestApplication.getContext().getFilesDir() + File.separator + "DiskTest");
+									Environment.getExternalStorageDirectory() + File.separator + "DiskTest" + File.separator, 
+									DiskTestApplication.getContext().getFilesDir() + File.separator + "DiskTest" + File.separator);
 						else 
 							readFileOperation.result = readFileOperation.readFile(
-									DiskTestApplication.getContext().getFilesDir() + File.separator + "DiskTest", 
-									Environment.getExternalStorageDirectory() + File.separator + "DiskTest");
+									DiskTestApplication.getContext().getFilesDir() + File.separator + "DiskTest" + File.separator, 
+									Environment.getExternalStorageDirectory() + File.separator + "DiskTest" + File.separator);
 					else 
 						readFileOperation.result = readFileOperation.readFile();
 					

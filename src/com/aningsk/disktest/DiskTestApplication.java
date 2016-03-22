@@ -68,17 +68,17 @@ public class DiskTestApplication extends Application{
 	
 	public static String getTestPath() {
 		if (!internalDiskSelected && SystemInfo.externalMemoryAvailable()) 
-			testPath = Environment.getExternalStorageDirectory() + File.separator + "DiskTest";
+			testPath = Environment.getExternalStorageDirectory() + File.separator + "DiskTest" + File.separator;
 		else 
-			testPath = context.getFilesDir() + File.separator + "DiskTest";
+			testPath = context.getFilesDir() + File.separator + "DiskTest" + File.separator;
 		return testPath;
 	}
 	
 	public static String getResultPath() {
 		if (!internalDiskSelected && !takeCrossTestSelected && SystemInfo.externalMemoryAvailable())
-			resultPath = Environment.getExternalStorageDirectory() + File.separator + "DiskTest";
+			resultPath = Environment.getExternalStorageDirectory() + File.separator + "DiskTest" + File.separator;
 		else 
-			resultPath = context.getFilesDir() + File.separator + "DiskTest";
+			resultPath = context.getFilesDir() + File.separator + "DiskTest" + File.separator;
 		return resultPath;
 	}
 
