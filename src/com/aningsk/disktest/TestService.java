@@ -32,8 +32,6 @@ public class TestService extends Service implements Runnable {
 	private static int COUNT = 2;
 	private static double avrSpeed_w = 0;
 	private static double avrSpeed_r = 0;
-	//private static String w_md5Cksum;
-	//private static String r_md5Cksum;
 	private static long w_crc32;
 	private static long r_crc32;
 	private static int ckfailcount = 0;
@@ -79,15 +77,24 @@ public class TestService extends Service implements Runnable {
 		
 		FileWriter resultWriter = null;
         
+		/*
+		 * Now I support 3 units in DiskTestApplication (B, KB, MB), 
+		 * but I only use KB and MB.
+		 * So "int i = 1;" that means "FileOperation.setUnit(DiskTestApplication.KB);", 
+		 * that's the reason I write them out of the FOR case.
+		 * 
+		 * If you want to use only one unit, remove the FOR case and 
+		 * set the unit you want then use "if (runFlag) {".
+		 */
+		int i = 1;
 		FileOperation.setUnit(DiskTestApplication.KB);
-		for (int i = 0; runFlag && i < 2; 
-				FileOperation.setUnit(DiskTestApplication.MB), i++) {
-		//if (runFlag) {
+		for (; runFlag && i < DiskTestApplication.UNIT.length - 1; 
+				FileOperation.setUnit(DiskTestApplication.UNIT[++i])) {
+			
 			if (debug)Log.i(DEBUG, "quantity:" + QUANTITY);
 			for (int s = 0; s < QUANTITY && runFlag; s++) { 
 				
 				int testCount = DiskTestApplication.getTakeCrossTestSelectState() ? 2 * COUNT : COUNT;
-				
 				while (count < testCount && runFlag) {
 					filesize = testsize[s]; 
 					resultWriter = new FileWriter(resultFile, true);
@@ -119,7 +126,6 @@ public class TestService extends Service implements Runnable {
 					w_crc32 = Result.crc32.getValue();
 
 					Result.w_speed = (double)Math.round(Result.w_speed * 1000000) / 1000000.0;
-					//if (debug)Log.i(DEBUG, "w_speed:" + df.format(Result.w_speed) + " md5cksum:" + Result.md5Cksum);
 					if (debug)Log.i(DEBUG, "w_speed:" + df.format(Result.w_speed) + " crc32:" + w_crc32);
 					
 					//read the file that size is file size.
@@ -142,7 +148,6 @@ public class TestService extends Service implements Runnable {
 					r_crc32 = Result.crc32.getValue();
 
 					Result.r_speed = (double)Math.round(Result.r_speed * 1000000) / 1000000.0;
-					//if (debug)Log.i(DEBUG, "r_speed:" + df.format(Result.r_speed) + " md5cksum:" + Result.md5Cksum);
 					if (debug)Log.i(DEBUG, "r_speed:" + df.format(Result.r_speed) + " crc32:" + r_crc32);
 					
 					resultWriter.write(df.format(Result.w_speed).toString());
