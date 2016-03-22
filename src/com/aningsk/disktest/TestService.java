@@ -24,12 +24,10 @@ public class TestService extends Service implements Runnable {
 	private static String resultPath = DiskTestApplication.getResultPath();
 	private static String resultName = File.separator + DiskTestApplication.getResultFileName();
 	
-//	private static int[] testsize = {16, 32, 64, 128, 256, 512, 1024,
-//		16*1024, 32*1024, 64*1024, 128*1024, 256*1024, 512*1024, 1024*1024};
+//	private static int[] testsize = {16, 32, 64, 128, 256, 512, 1024};
 	private static int[] testsize = {16, 32};
 	private static int QUANTITY = testsize.length;
-//	private static int QUANTITY = 2;
-	private static int COUNT = 2;
+	private static int COUNT = 5;
 	private static double avrSpeed_w = 0;
 	private static double avrSpeed_r = 0;
 	private static long w_crc32;
@@ -78,15 +76,15 @@ public class TestService extends Service implements Runnable {
 		FileWriter resultWriter = null;
         
 		/*
-		 * Now I support 3 units in DiskTestApplication (B, KB, MB), 
+		 * Now I support 2 units in DiskTestApplication (KB, MB), 
 		 * but I only use KB and MB.
-		 * So "int i = 1;" that means "FileOperation.setUnit(DiskTestApplication.KB);", 
+		 * So "int i = 0;" that means "FileOperation.setUnit(DiskTestApplication.KB);", 
 		 * that's the reason I write them out of the FOR case.
 		 * 
 		 * If you want to use only one unit, remove the FOR case and 
 		 * set the unit you want then use "if (runFlag) {".
 		 */
-		int i = 1;
+		int i = 0;
 		FileOperation.setUnit(DiskTestApplication.KB);
 		for (; runFlag && i < DiskTestApplication.UNIT.length - 1; 
 				FileOperation.setUnit(DiskTestApplication.UNIT[++i])) {
