@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Random;
 import java.util.zip.CRC32;
 
@@ -16,11 +17,32 @@ public class FileOperation {
 	protected static String testFile;
 
 	protected static String string = DiskTestApplication.getTestData();
-	protected int unit = 1024; //means KB
+	protected static int unit = DiskTestApplication.KB; //means KB
 
 	protected Long startTime = Long.valueOf(0L);
 	protected Long endTime = Long.valueOf(0L);
 	protected Long useTime = Long.valueOf(0L);
+
+	protected Result result= new Result();
+	protected static class Result {
+		protected static Double w_speed = Double.valueOf(0);
+		protected static Double r_speed = Double.valueOf(0);
+		protected static CRC32 crc32 = new CRC32();
+		
+		protected static void updateCRC32(File file) throws IOException {
+			FileInputStream fi = new FileInputStream(file);
+			crc32.update(fi.read());
+			fi.close();
+		}
+	}
+	
+	public static void setUnit(int u) {
+		unit = u;
+	}
+	
+	public static int getUnit() {
+		return unit;
+	}
 	
 	FileOperation() {
 		testPath = DiskTestApplication.getTestPath();
@@ -29,18 +51,10 @@ public class FileOperation {
 		if (!folder.exists())
 			folder.mkdir();
 	}
-	protected Result result= new Result();
-	protected static class Result {
-		protected static Double w_speed = Double.valueOf(0);
-		protected static Double r_speed = Double.valueOf(0);
-		protected static CRC32 crc32 = new CRC32();
-		//protected static String md5Cksum;
-	}
 }
 
 class writeOperation extends FileOperation { 
 	
-	@SuppressWarnings("resource")
 	public Result writeFile(String filePath, int filesize) {
 		Random random = new Random();
 		File saveFile;
@@ -69,19 +83,18 @@ class writeOperation extends FileOperation {
 			}
 
 			fileWriter.close();
-			//Result.md5Cksum = new String(Hex.encodeHex(DigestUtils.md5(new FileInputStream(saveFile))));
-			Result.crc32.update((new FileInputStream(saveFile)).read());
+			//Result.crc32.update((new FileInputStream(saveFile)).read());
+			Result.updateCRC32(saveFile);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
 		if (debug)Log.i("DEBUG", "write useTime " + useTime + "ns.");
-		Result.w_speed = (double)filesize / (double)useTime; //KB/ns
+		Result.w_speed = (double)filesize * unit / 1024 / (double)useTime; //KB/ns
 		Result.w_speed = Result.w_speed / 1024 * 1000000000; //MB/s
 		return result;
 	}
 	
-	@SuppressWarnings("resource")
 	public Result writeFile(int filesize) {
 		Random random = new Random();
 		File saveFile = new File(testPath + testFile);
@@ -105,14 +118,16 @@ class writeOperation extends FileOperation {
 			}
 
 			fileWriter.close();
-			//Result.md5Cksum = new String(Hex.encodeHex(DigestUtils.md5(new FileInputStream(saveFile))));
-			Result.crc32.update((new FileInputStream(saveFile)).read());
+			//Result.crc32.update((new FileInputStream(saveFile)).read());
+			Result.updateCRC32(saveFile);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
 		if (debug)Log.i("DEBUG", "write useTime " + useTime + "ns.");
-		Result.w_speed = (double)filesize / (double)useTime; //KB/ns
+		if (debug)Log.i("DEBUG-NEW", "filesize: " + (double)filesize * unit / 1024);
+		if (debug)Log.i("DEBUG-NEW", "unit: " + unit);
+		Result.w_speed = (double)filesize * unit / 1024 / (double)useTime; //KB/ns
 		Result.w_speed = Result.w_speed / 1024 * 1000000000; //MB/s
 		return result;
 	}
@@ -120,7 +135,6 @@ class writeOperation extends FileOperation {
 
 class readOperation extends FileOperation { 
 	
-	@SuppressWarnings("resource")
 	public Result readFile(String fromPath, String toPath) {
 		File saveFile;
 		File tempFile;
@@ -155,8 +169,8 @@ class readOperation extends FileOperation {
 			
 			fileReader.close();
 			fileWriter.close();
-			//Result.md5Cksum = new String(Hex.encodeHex(DigestUtils.md5(new FileInputStream(tempFile))));
-			Result.crc32.update((new FileInputStream(tempFile)).read());
+			//Result.crc32.update((new FileInputStream(tempFile)).read());
+			Result.updateCRC32(tempFile);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -167,7 +181,6 @@ class readOperation extends FileOperation {
 		return result;
 	}
 	
-	@SuppressWarnings("resource")
 	public Result readFile() {
 		File saveFile = new File(testPath + testFile);
 		File tempFile = new File(testPath + File.separator + DiskTestApplication.getTempFileName());
@@ -195,8 +208,8 @@ class readOperation extends FileOperation {
 			
 			fileReader.close();
 			fileWriter.close();
-			//Result.md5Cksum = new String(Hex.encodeHex(DigestUtils.md5(new FileInputStream(tempFile))));
-			Result.crc32.update((new FileInputStream(tempFile)).read());
+			//Result.crc32.update((new FileInputStream(tempFile)).read());
+			Result.updateCRC32(tempFile);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

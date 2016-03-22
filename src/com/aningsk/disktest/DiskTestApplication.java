@@ -21,6 +21,9 @@ public class DiskTestApplication extends Application{
 	
 	private static String testData;
 	
+	public static final int KB = 1024;
+	public static final int MB = 1024 * 1024;
+	
 	public void onCreate() {
 		context = getApplicationContext();
 

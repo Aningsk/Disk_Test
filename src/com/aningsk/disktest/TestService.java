@@ -26,10 +26,10 @@ public class TestService extends Service implements Runnable {
 	
 //	private static int[] testsize = {16, 32, 64, 128, 256, 512, 1024,
 //		16*1024, 32*1024, 64*1024, 128*1024, 256*1024, 512*1024, 1024*1024};
-	private static int[] testsize = {16, 32, 64, 128, 256, 512, 1024};
+	private static int[] testsize = {16, 32};
 	private static int QUANTITY = testsize.length;
 //	private static int QUANTITY = 2;
-	private static int COUNT = 5;
+	private static int COUNT = 2;
 	private static double avrSpeed_w = 0;
 	private static double avrSpeed_r = 0;
 	//private static String w_md5Cksum;
@@ -79,7 +79,10 @@ public class TestService extends Service implements Runnable {
 		
 		FileWriter resultWriter = null;
         
-		if (runFlag) {
+		FileOperation.setUnit(DiskTestApplication.KB);
+		for (int i = 0; runFlag && i < 2; 
+				FileOperation.setUnit(DiskTestApplication.MB), i++) {
+		//if (runFlag) {
 			if (debug)Log.i(DEBUG, "quantity:" + QUANTITY);
 			for (int s = 0; s < QUANTITY && runFlag; s++) { 
 				
@@ -90,12 +93,14 @@ public class TestService extends Service implements Runnable {
 					resultWriter = new FileWriter(resultFile, true);
 					
 					if (count == 0) {
-						resultWriter.write(("This is the test of " + filesize + "KB.\n"));
+						resultWriter.write("This is the test of " + filesize + 
+								(FileOperation.getUnit() == DiskTestApplication.KB ? "KB.\n" : "MB.\n"));
 						resultWriter.write("WSpeed\t\tRSpeed\t\tchecksum\n");
 					}
 					
 					if (debug)Log.i(DEBUG, " ");
-					if (debug)Log.i(DEBUG, "File Size is " + filesize + "KB.");
+					if (debug)Log.i(DEBUG, "File Size is " + filesize + 
+							(FileOperation.getUnit() == DiskTestApplication.KB ? "KB.\n" : "MB.\n"));
 					
 					//write the file that size is file size.
 					writeOperation writeFileOperation = new writeOperation();
