@@ -21,10 +21,13 @@ public class DiskTestApplication extends Application{
 	
 	private static String testData;
 	
-	public static final int B = 1;
 	public static final int KB = 1024;
 	public static final int MB = 1024 * 1024;
-	public static final int[] UNIT = {B, KB, MB, 0};//Must end with 0.
+	public static final int[] UNIT = {KB, MB, 0};//Must end with 0.
+	
+	public static final int buffer_1k = 1024;
+	public static final int buffer_4k = 4096;
+	public static final int[] BUFFER = {buffer_1k, buffer_4k, 0};
 	
 	public void onCreate() {
 		context = getApplicationContext();
