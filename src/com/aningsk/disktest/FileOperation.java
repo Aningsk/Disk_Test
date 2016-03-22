@@ -53,94 +53,107 @@ public class FileOperation {
 	}
 }
 
+/*
+ * In writeOperation and readOperation, the buffer used to write/read 
+ * on a file will be different size while use different unit.
+ * That maybe cause different write/read speed.
+ */
+
 class writeOperation extends FileOperation { 
 	
-	public Result writeFile(String filePath, int filesize) {
+	private Result __writeFile(File saveFile, int filesize) {
 		Random random = new Random();
-		File saveFile;
 		char[] writeBuffer = new char[unit];
+		
+		if (saveFile.exists())
+			saveFile.delete();
+		try {
+			FileWriter fileWriter = new FileWriter(saveFile, true);
+			
+			for (int i = 0; i < filesize; i++) {
+				for (int j = 0; j < unit; j++) {
+					int number = random.nextInt(string.length());// [0,62)
+					writeBuffer[i] = string.charAt(number);
+				}
+				startTime = System.nanoTime();
+				fileWriter.write(writeBuffer);
+				endTime = System.nanoTime();
+				useTime = useTime + endTime - startTime;
+				Thread.sleep(50);
+			}
+
+			fileWriter.close();
+			Thread.sleep(50);
+			Result.updateCRC32(saveFile);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		if (debug)Log.i("DEBUG", "write useTime " + useTime + "ns.");
+		Result.w_speed = (double)filesize * unit / 1024 / (double)useTime; //KB/ns
+		Result.w_speed = Result.w_speed / 1024 * 1000000000; //MB/s
+		return result;
+	}
+	
+	public Result writeFile(String filePath, int filesize) {
+		File saveFile;
 		
 		if (null != filePath)
 			saveFile = new File(filePath + testFile);
 		else
 			return result;
 		
-		if (saveFile.exists())
-			saveFile.delete();
-		try {
-			FileWriter fileWriter = new FileWriter(saveFile, true);
-			
-			for (int i = 0; i < filesize; i++) {
-				for (int j = 0; j < unit; j++) {
-					int number = random.nextInt(string.length());// [0,62)
-					writeBuffer[i] = string.charAt(number);
-				}
-				startTime = System.nanoTime();
-				fileWriter.write(writeBuffer);
-				endTime = System.nanoTime();
-				useTime = useTime + endTime - startTime;
-				Thread.sleep(50);
-			}
-
-			fileWriter.close();
-			//Result.crc32.update((new FileInputStream(saveFile)).read());
-			Thread.sleep(50);
-			Result.updateCRC32(saveFile);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		if (debug)Log.i("DEBUG", "write useTime " + useTime + "ns.");
-		Result.w_speed = (double)filesize * unit / 1024 / (double)useTime; //KB/ns
-		Result.w_speed = Result.w_speed / 1024 * 1000000000; //MB/s
-		return result;
+		return __writeFile(saveFile, filesize);
 	}
 	
 	public Result writeFile(int filesize) {
-		Random random = new Random();
 		File saveFile = new File(testPath + testFile);
-		char[] writeBuffer = new char[unit];
-
-		if (saveFile.exists())
-			saveFile.delete();
-		try {
-			FileWriter fileWriter = new FileWriter(saveFile, true);
-			
-			for (int i = 0; i < filesize; i++) {
-				for (int j = 0; j < unit; j++) {
-					int number = random.nextInt(string.length());// [0,62)
-					writeBuffer[i] = string.charAt(number);
-				}
-				startTime = System.nanoTime();
-				fileWriter.write(writeBuffer);
-				endTime = System.nanoTime();
-				useTime = useTime + endTime - startTime;
-				Thread.sleep(50);
-			}
-
-			fileWriter.close();
-			//Result.crc32.update((new FileInputStream(saveFile)).read());
-			Thread.sleep(50);
-			Result.updateCRC32(saveFile);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		if (debug)Log.i("DEBUG", "write useTime " + useTime + "ns.");
-		Result.w_speed = (double)filesize * unit / 1024 / (double)useTime; //KB/ns
-		Result.w_speed = Result.w_speed / 1024 * 1000000000; //MB/s
-		return result;
+		return __writeFile(saveFile, filesize);
 	}
 }
 
 class readOperation extends FileOperation { 
 	
-	public Result readFile(String fromPath, String toPath) {
-		File saveFile;
-		File tempFile;
+	private Result __readFile(File saveFile, File tempFile) {
 		char[] readBuffer = new char[unit];
 		int filesize = 0;
 		int n = 0;
+		
+		if (tempFile.exists())
+			tempFile.delete();
+		try {
+			FileReader fileReader = new FileReader(saveFile);
+			FileWriter fileWriter = new FileWriter(tempFile);
+
+			do {
+				startTime = System.nanoTime();
+				n = fileReader.read(readBuffer);
+				endTime = System.nanoTime();
+				if (n > 0) {
+					useTime = useTime + endTime - startTime;
+					filesize += n; //here unit is B.
+					Thread.sleep(50);
+					fileWriter.write(readBuffer);
+				}
+			} while (n > 0);
+			
+			fileReader.close();
+			fileWriter.close();
+			Thread.sleep(50);
+			Result.updateCRC32(tempFile);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		if (debug)Log.i("DEBUG", "read useTime " + useTime + "ns.");
+		Result.r_speed = (double)filesize / 1024 / (double)useTime; //KB/ns
+		Result.r_speed = Result.r_speed / 1024 * 1000000000; //MB/s
+		return result;
+	}
+	
+	public Result readFile(String fromPath, String toPath) {
+		File saveFile;
+		File tempFile;
 		
 		if (null != fromPath && null != toPath) {
 			saveFile = new File(fromPath + testFile);
@@ -149,76 +162,12 @@ class readOperation extends FileOperation {
 			return result;
 		}
 		
-		if (tempFile.exists())
-			tempFile.delete();
-		try {
-			FileReader fileReader = new FileReader(saveFile);
-			FileWriter fileWriter = new FileWriter(tempFile);
-
-			do {
-				startTime = System.nanoTime();
-				n = fileReader.read(readBuffer);
-				endTime = System.nanoTime();
-				if (n > 0) {
-					useTime = useTime + endTime - startTime;
-					filesize += n; //here unit is B.
-					Thread.sleep(50);
-					fileWriter.write(readBuffer);
-				}
-			} while (n > 0);
-			
-			fileReader.close();
-			fileWriter.close();
-			//Result.crc32.update((new FileInputStream(tempFile)).read());
-			Thread.sleep(50);
-			Result.updateCRC32(tempFile);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		if (debug)Log.i("DEBUG", "read useTime " + useTime + "ns.");
-		Result.r_speed = (double)filesize / 1024 / (double)useTime; //KB/ns
-		Result.r_speed = Result.r_speed / 1024 * 1000000000; //MB/s
-		return result;
+		return __readFile(saveFile, tempFile);
 	}
 	
 	public Result readFile() {
 		File saveFile = new File(testPath + testFile);
 		File tempFile = new File(testPath + DiskTestApplication.getTempFileName());
-		char[] readBuffer = new char[unit];
-		int filesize = 0;
-		int n = 0;
-		
-		if (tempFile.exists())
-			tempFile.delete();
-		try {
-			FileReader fileReader = new FileReader(saveFile);
-			FileWriter fileWriter = new FileWriter(tempFile);
-
-			do {
-				startTime = System.nanoTime();
-				n = fileReader.read(readBuffer);
-				endTime = System.nanoTime();
-				if (n > 0) {
-					useTime = useTime + endTime - startTime;
-					filesize += n; //here unit is B.
-					Thread.sleep(50);
-					fileWriter.write(readBuffer);
-				}
-			} while (n > 0);
-			
-			fileReader.close();
-			fileWriter.close();
-			//Result.crc32.update((new FileInputStream(tempFile)).read());
-			Thread.sleep(50);
-			Result.updateCRC32(tempFile);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		if (debug)Log.i("DEBUG", "read useTime " + useTime + "ns.");
-		Result.r_speed = (double)filesize / 1024 / (double)useTime; //KB/ns
-		Result.r_speed = Result.r_speed / 1024 * 1000000000; //MB/s
-		return result;
+		return __readFile(saveFile, tempFile);
 	}
 }
