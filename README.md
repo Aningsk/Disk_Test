@@ -1,15 +1,16 @@
-#Disk Test (Version 2.0.1) 
+#Disk Test (Version 2.9) 
 This Android APP is use to test your device's SD/eMMC.   
 Developed by Aningsk, and comply with Apache License Version 2.0
 
 ##Description
+Well actually the APP just maltreat your device. Yes, it is.  
 This APP can calculate the speed of read/write in SD/eMMC, and save the result in a file.
 User can select where they want to take test on (Internal or External Disk).
-As a whole test will spend too long time, sometimes I only take a bit of test (16K and 32K files). 
-If you want to test other kinds size, please change the QUANTITY or testsize in TestService.java 
+As a whole test will spend too long time. In most case I don't take full test.
+If you want to take different quantity test, please change the QUANTITY or testsize in TestService.java 
 and make sure that your device has enough big disk.   
 When the APP takes a test, it will create TestFile.txt with random data, and copy it as 
-TempFile.txt . APP can check the MD5 of these two file are the same value or not, and get the 
+TempFile.txt . APP can check the CRC32 of these two file are the same value or not, and get the 
 speed of read/write. And repeat 5 times. User can see the result by clicking "Result" button.
 
 I use ADT(eclipse) to develop this project. I cannot get Android Studio.  
@@ -24,6 +25,14 @@ I'm a Chinese newbie programmer without any VPN @\_@
 
 ***
 ##Version Mark 
+* v2.9 (2016-03-22) Major Upgrade   
+    v1.6.1 have a BUG: It cannot test with large file. Now I had fixed it, and change a lot of code. 
+    Yes, it's v2.9 near v3.0  
+    First of all, I seperate the test file as different units(KB and MB) in order to fix the BUG. 
+    And I use CRC32 instead of MD5, CRC32 is more faster and lighter. Then I adjust much code for more 
+    elegant. That always be consistent.
+    In fact, I forked v2.0.2 from v1.6.1 to fix the issue, but I didn't release it. Finally I merge it 
+    into v2.0.1 and go on developing the project.  
 * v2.0.1 (2016-03-18)   
     Fixed sometimes cannot show the highest order number of RAM size.  
 * v2.0 (2016-03-14)  
