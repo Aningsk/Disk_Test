@@ -12,6 +12,7 @@ import android.util.Log;
 
 public class FileOperation {
 	protected static boolean debug = true;
+	protected static final int SLEEP_TIME = 10;
 	
 	protected static String testPath;
 	protected static String testFile;
@@ -95,7 +96,7 @@ class writeOperation extends FileOperation {
 				fileWriter.write(writeBuffer);
 				endTime = System.nanoTime();
 				useTime = useTime + endTime - startTime;
-				Thread.sleep(10);
+				Thread.sleep(SLEEP_TIME);
 			}
 			
 			fileWriter.close();
@@ -147,7 +148,7 @@ class readOperation extends FileOperation {
 				if (n > 0) {
 					useTime = useTime + endTime - startTime;
 					filesize += n; //here unit is B.
-					Thread.sleep(10);
+					Thread.sleep(SLEEP_TIME);
 					fileWriter.write(readBuffer);
 				}
 			} while (n > 0);
