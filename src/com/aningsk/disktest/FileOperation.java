@@ -47,8 +47,8 @@ public class FileOperation {
 	}
 	
 	FileOperation() {
-		DiskTestApplication.setBufferSize(DiskTestApplication.buffer_4k);
-		bufferSize = DiskTestApplication.getBufferSize();
+		//DiskTestApplication.setBufferSize(DiskTestApplication.buffer_4k);
+		//bufferSize = DiskTestApplication.getBufferSize();
 		testPath = DiskTestApplication.getTestPath();
 		testFile = DiskTestApplication.getTestFileName();
 		File folder = new File(testPath);
@@ -61,6 +61,7 @@ class writeOperation extends FileOperation {
 	
 	private Result __writeFile(File saveFile, int filesize) {
 		Random random = new Random();
+		bufferSize = DiskTestApplication.getBufferSize();
 		char[] writeBuffer = new char[bufferSize];
 		
 		if (saveFile.exists())
@@ -131,6 +132,7 @@ class writeOperation extends FileOperation {
 class readOperation extends FileOperation { 
 	
 	private Result __readFile(File saveFile, File tempFile) {
+		bufferSize = DiskTestApplication.getBufferSize();
 		char[] readBuffer = new char[bufferSize];
 		int filesize = 0;
 		int n = 0;

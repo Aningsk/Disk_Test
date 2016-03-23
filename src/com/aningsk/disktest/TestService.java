@@ -27,7 +27,7 @@ public class TestService extends Service implements Runnable {
 //	private static int[] testsize = {16, 32, 64, 128, 256, 512, 1024};
 	private static int[] testsize = {16, 32};
 	private static int QUANTITY = testsize.length;
-	private static int COUNT = 5;
+	private static int COUNT = 2;
 	private static double avrSpeed_w = 0;
 	private static double avrSpeed_r = 0;
 	private static long w_crc32;
@@ -84,6 +84,7 @@ public class TestService extends Service implements Runnable {
 		 * If you want to use only one unit, remove the FOR case and 
 		 * set the unit you want then use "if (runFlag) {".
 		 */
+		if (debug)Log.i(DEBUG, "Buffer Size: " + DiskTestApplication.getBufferSize() + " B.");
 		int i = 0;
 		FileOperation.setUnit(DiskTestApplication.KB);
 		for (; runFlag && i < DiskTestApplication.UNIT.length - 1; 
