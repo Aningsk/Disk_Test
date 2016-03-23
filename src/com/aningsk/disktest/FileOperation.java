@@ -46,7 +46,7 @@ public class FileOperation {
 	}
 	
 	FileOperation() {
-		DiskTestApplication.setBufferSize(DiskTestApplication.KB);
+		DiskTestApplication.setBufferSize(DiskTestApplication.buffer_4k);
 		bufferSize = DiskTestApplication.getBufferSize();
 		testPath = DiskTestApplication.getTestPath();
 		testFile = DiskTestApplication.getTestFileName();
@@ -66,7 +66,7 @@ class writeOperation extends FileOperation {
 			saveFile.delete();
 		try {
 			FileWriter fileWriter = new FileWriter(saveFile, true);
-			
+/*			
 			for (int i = 0; i < filesize; i++) {
 				for (int j = 0; j < (unit >= bufferSize ? unit / bufferSize: unit); j++) {
 					for (int c = 0; c < (bufferSize < unit ? bufferSize : unit); c++) {
@@ -81,7 +81,23 @@ class writeOperation extends FileOperation {
 					Thread.sleep(5);
 				}
 			}
-
+*/
+//			if (debug)Log.i("DEBUG-NEW", "filesize: " + filesize);
+//			if (debug)Log.i("DEBUG-NEW", "unit: " + unit);
+//			if (debug)Log.i("DEBUG-NEW", "bufferSize: " + bufferSize);
+			for (int i = 0; i < filesize * unit / bufferSize; i++) {
+				for (int j = 0; j < bufferSize; j++) {
+					int number = random.nextInt(string.length());
+					writeBuffer[j] = string.charAt(number);
+				}
+				//when writeBuffer is full, we write it into file.
+				startTime = System.nanoTime();
+				fileWriter.write(writeBuffer);
+				endTime = System.nanoTime();
+				useTime = useTime + endTime - startTime;
+				Thread.sleep(10);
+			}
+			
 			fileWriter.close();
 			Result.updateCRC32(saveFile);
 		} catch (Exception e) {
@@ -131,7 +147,7 @@ class readOperation extends FileOperation {
 				if (n > 0) {
 					useTime = useTime + endTime - startTime;
 					filesize += n; //here unit is B.
-					Thread.sleep(5);
+					Thread.sleep(10);
 					fileWriter.write(readBuffer);
 				}
 			} while (n > 0);

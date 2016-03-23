@@ -182,7 +182,8 @@ public class TestService extends Service implements Runnable {
 					avrSpeed_w = (double)Math.round(avrSpeed_w * 1000000) / 1000000.0;
 					avrSpeed_r = (double)Math.round(avrSpeed_r * 1000000) / 1000000.0;
 					
-					resultWriter.write(("Result of " + filesize + "KB is:\n"));
+					resultWriter.write(("Result of " + filesize + 
+							(FileOperation.getUnit() == DiskTestApplication.KB ? "KB is:\n" : "MB is:\n")));
 					resultWriter.write(("write average speed is " + df.format(avrSpeed_w) + "M/s.\n"));
 					resultWriter.write(("read average speed is " + df.format(avrSpeed_r) + "M/s.\n"));
 				}
