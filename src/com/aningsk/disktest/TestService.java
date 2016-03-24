@@ -24,8 +24,7 @@ public class TestService extends Service implements Runnable {
 	private static String resultPath = DiskTestApplication.getResultPath();
 	private static String resultName = File.separator + DiskTestApplication.getResultFileName();
 	
-//	private static int[] testsize = {16, 32, 64, 128, 256, 512, 1024};
-	private static int[] testsize = {16, 32};
+	private static int[] testsize = DiskTestApplication.testsize;
 	private static int QUANTITY = testsize.length;
 	private static int COUNT = DiskTestApplication.defaultCount;
 	private static double avrSpeed_w = 0;

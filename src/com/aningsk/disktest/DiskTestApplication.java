@@ -25,6 +25,7 @@ public class DiskTestApplication extends Application{
 	private static int count = 0;
 	
 	public static final int defaultCount = 5;
+	public static final int[] testsize = {16, 32, 64, 128, 256, 512, 1024};
 	
 	public static final int KB = 1024;
 	public static final int MB = 1024 * 1024;
