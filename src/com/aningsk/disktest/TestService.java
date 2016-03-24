@@ -80,6 +80,7 @@ public class TestService extends Service implements Runnable {
 		String startDate = dateFormat.format(new java.util.Date());
 		resultWriter = new FileWriter(resultFile, true);
 		resultWriter.write("Start Time: " + startDate + "\n");
+		resultWriter.write("Buffer Size: " + DiskTestApplication.getBufferSize() + " B.\n\n");
 		resultWriter.close();
 		
 		if (DiskTestApplication.isDiskBigEnough() == false) {
@@ -97,7 +98,6 @@ public class TestService extends Service implements Runnable {
 		 * If you want to use only one unit, remove the FOR case and 
 		 * set the unit you want then use "if (runFlag) {".
 		 */
-		if (debug)Log.i(DEBUG, "Buffer Size: " + DiskTestApplication.getBufferSize() + " B.");
 		int i = 0;
 		FileOperation.setUnit(DiskTestApplication.KB);
 		for (; runFlag && i < DiskTestApplication.UNIT.length - 1; 
