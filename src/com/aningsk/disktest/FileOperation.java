@@ -16,15 +16,16 @@ public class FileOperation {
 	
 	protected static String testPath;
 	protected static String testFile;
-
+	
 	protected static String string = DiskTestApplication.getTestData();
 	protected static int unit = DiskTestApplication.KB; //means KB
 	protected static int bufferSize = DiskTestApplication.buffer_1k;
 
 	protected Long startTime = Long.valueOf(0L);
 	protected Long endTime = Long.valueOf(0L);
-	protected Long useTime = Long.valueOf(0L);
-
+	protected Long useTime = Long.valueOf(0L);	
+	protected Random random;
+	
 	protected Result result= new Result();
 	protected static class Result {
 		protected static Double w_speed = Double.valueOf(0);
@@ -51,6 +52,7 @@ public class FileOperation {
 		bufferSize = DiskTestApplication.getBufferSize();
 		testPath = DiskTestApplication.getTestPath();
 		testFile = DiskTestApplication.getTestFileName();
+		random = new Random();
 		File folder = new File(testPath);
 		if (!folder.exists())
 			folder.mkdir();
@@ -60,7 +62,7 @@ public class FileOperation {
 class writeOperation extends FileOperation { 
 	
 	private Result __writeFile(File saveFile, int filesize) {
-		Random random = new Random();
+		//Random random = new Random();
 		//bufferSize = DiskTestApplication.getBufferSize();
 		char[] writeBuffer = new char[bufferSize];
 		
