@@ -110,11 +110,32 @@
         android:text="@string/buffer"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
+	<TextView
+        android:id="@+id/textView6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/editText"
+        android:layout_alignTop="@+id/textView5"
+        android:scrollbars="vertical"
+        android:text="@string/times"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+	
     <Spinner
         android:id="@+id/spinner"
-        android:layout_width="wrap_content"
+        android:layout_width="100dip"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@+id/radioGroup" 
         android:layout_below="@+id/textView5" />
+    
+    <EditText
+        android:id="@+id/editText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/spinner"
+        android:layout_alignTop="@+id/spinner"
+        android:inputType="number" 
+        android:imeOptions="actionDone"
+        android:hint="@string/times"/>
+
 
 </RelativeLayout>

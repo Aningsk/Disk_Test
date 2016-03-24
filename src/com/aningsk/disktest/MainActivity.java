@@ -16,21 +16,25 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.TextView.OnEditorActionListener;
 
 public class MainActivity extends Activity {
 	private Intent service;
 	private serviceReceiver receiver; 
 	private TextView showView, showDiskSize, showRamSize, showInformation;
 	private Button startButton, stopButton, reslutButton;
+	private EditText timesEditText;
 	private RadioGroup selectDisk;
 	private Spinner bufferSpinner;
 	private List<String> bufferList;
@@ -55,7 +59,8 @@ public class MainActivity extends Activity {
         showRamSize = (TextView)findViewById(R.id.textView2);
         showDiskSize = (TextView)findViewById(R.id.textView3);
         showInformation = (TextView)findViewById(R.id.textView4);
-        bufferSpinner = (Spinner) findViewById(R.id.spinner);
+        bufferSpinner = (Spinner)findViewById(R.id.spinner);
+        timesEditText = (EditText)findViewById(R.id.editText);
     
         bufferList = new ArrayList<String>();
         for (int i = 0; i < DiskTestApplication.BUFFER.length - 1; i++) 
@@ -78,6 +83,13 @@ public class MainActivity extends Activity {
         selectedRadioButton = DiskTestApplication.getInternalDiskSelectState() ? R.id.radioButton1 : R.id.radioButton2;
         selectDisk.check(selectedRadioButton);
         
+        timesEditText.setOnEditorActionListener(new OnEditorActionListener(){
+			@Override
+			public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+				// TODO Auto-generated method stub
+				return false;
+			}
+        });
         bufferSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 			@Override
 			public void onItemSelected(AdapterView<?> parent, View view,

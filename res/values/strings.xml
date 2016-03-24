@@ -16,6 +16,7 @@
     <string name="disk_size">Disk Size</string>
     <string name="partitions">Partitions</string>
     <string name="buffer">Buffer</string>
+    <string name="times">Times</string>
     <string name="available">Available</string>
     <string name="total">Total</string>
     
