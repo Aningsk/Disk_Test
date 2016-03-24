@@ -15,6 +15,7 @@
     <string name="ram_size">内存大小</string>
     <string name="disk_size">磁盘大小</string>
     <string name="partitions">分区信息</string>
+    <string name="buffer">缓冲区</string>
     <string name="available">可用</string>
     <string name="total">共计</string>
     

@@ -16,15 +16,16 @@ public class FileOperation {
 	
 	protected static String testPath;
 	protected static String testFile;
-
+	
 	protected static String string = DiskTestApplication.getTestData();
 	protected static int unit = DiskTestApplication.KB; //means KB
 	protected static int bufferSize = DiskTestApplication.buffer_1k;
 
 	protected Long startTime = Long.valueOf(0L);
 	protected Long endTime = Long.valueOf(0L);
-	protected Long useTime = Long.valueOf(0L);
-
+	protected Long useTime = Long.valueOf(0L);	
+	protected Random random;
+	
 	protected Result result= new Result();
 	protected static class Result {
 		protected static Double w_speed = Double.valueOf(0);
@@ -47,10 +48,10 @@ public class FileOperation {
 	}
 	
 	FileOperation() {
-		DiskTestApplication.setBufferSize(DiskTestApplication.buffer_4k);
 		bufferSize = DiskTestApplication.getBufferSize();
 		testPath = DiskTestApplication.getTestPath();
 		testFile = DiskTestApplication.getTestFileName();
+		random = new Random();
 		File folder = new File(testPath);
 		if (!folder.exists())
 			folder.mkdir();
@@ -60,32 +61,13 @@ public class FileOperation {
 class writeOperation extends FileOperation { 
 	
 	private Result __writeFile(File saveFile, int filesize) {
-		Random random = new Random();
 		char[] writeBuffer = new char[bufferSize];
 		
 		if (saveFile.exists())
 			saveFile.delete();
 		try {
 			FileWriter fileWriter = new FileWriter(saveFile, true);
-/*			
-			for (int i = 0; i < filesize; i++) {
-				for (int j = 0; j < (unit >= bufferSize ? unit / bufferSize: unit); j++) {
-					for (int c = 0; c < (bufferSize < unit ? bufferSize : unit); c++) {
-						int number = random.nextInt(string.length());// [0,62)
-						writeBuffer[c] = string.charAt(number);
-					}
-					//when writeBuffer is full, we write it into file.
-					startTime = System.nanoTime();
-					fileWriter.write(writeBuffer);
-					endTime = System.nanoTime();
-					useTime = useTime + endTime - startTime;
-					Thread.sleep(5);
-				}
-			}
-*/
-//			if (debug)Log.i("DEBUG-NEW", "filesize: " + filesize);
-//			if (debug)Log.i("DEBUG-NEW", "unit: " + unit);
-//			if (debug)Log.i("DEBUG-NEW", "bufferSize: " + bufferSize);
+
 			for (int i = 0; i < filesize * unit / bufferSize; i++) {
 				for (int j = 0; j < bufferSize; j++) {
 					int number = random.nextInt(string.length());

@@ -6,6 +6,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
@@ -16,9 +18,12 @@ import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 public class MainActivity extends Activity {
@@ -27,6 +32,9 @@ public class MainActivity extends Activity {
 	private TextView showView, showDiskSize, showRamSize, showInformation;
 	private Button startButton, stopButton, reslutButton;
 	private RadioGroup selectDisk;
+	private Spinner bufferSpinner;
+	private List<String> bufferList;
+	private ArrayAdapter<String> bufferAdapter;
 	private boolean startFlag = false; //make sure Service cannot start before stop.
 	private boolean inforFlag = true;
 	private String resultPath = null;
@@ -47,6 +55,16 @@ public class MainActivity extends Activity {
         showRamSize = (TextView)findViewById(R.id.textView2);
         showDiskSize = (TextView)findViewById(R.id.textView3);
         showInformation = (TextView)findViewById(R.id.textView4);
+        bufferSpinner = (Spinner) findViewById(R.id.spinner);
+    
+        bufferList = new ArrayList<String>();
+        for (int i = 0; i < DiskTestApplication.BUFFER.length - 1; i++) 
+        	if (0 != DiskTestApplication.BUFFER[i])
+        		bufferList.add(DiskTestApplication.BUFFER[i] + " B");
+
+        bufferAdapter= new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, bufferList);
+        bufferAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        bufferSpinner.setAdapter(bufferAdapter);
         
         receiver = new serviceReceiver();
 		IntentFilter testFilter = new IntentFilter("TestEnd");
@@ -60,6 +78,18 @@ public class MainActivity extends Activity {
         selectedRadioButton = DiskTestApplication.getInternalDiskSelectState() ? R.id.radioButton1 : R.id.radioButton2;
         selectDisk.check(selectedRadioButton);
         
+        bufferSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+			@Override
+			public void onItemSelected(AdapterView<?> parent, View view,
+					int position, long id) {
+				// TODO Auto-generated method stub		
+				DiskTestApplication.setBufferSize(DiskTestApplication.BUFFER[(int)id]);
+			}
+			@Override
+			public void onNothingSelected(AdapterView<?> parent) {
+				// TODO Auto-generated method stub
+			}
+        });
         selectDisk.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 			@Override
 			public void onCheckedChanged(RadioGroup arg0, int arg1) {
@@ -166,6 +196,8 @@ public class MainActivity extends Activity {
     
 	public void clickStart(View v) {
 		lockRadioGroup = true;
+		selectDisk.setEnabled(false);
+		bufferSpinner.setEnabled(false);
 		if (!startFlag) {
 			showView.setText(R.string.please_wait);
 			startFlag = true;
@@ -177,6 +209,8 @@ public class MainActivity extends Activity {
 	
 	public void clickStop(View v) {
 		lockRadioGroup = false;
+		selectDisk.setEnabled(true);
+		bufferSpinner.setEnabled(true);
 		if (startFlag)
 			startFlag = false;
 		showView.setText(R.string.test_stop);

@@ -8,8 +8,9 @@
  
     <RadioGroup
         android:id="@+id/radioGroup"
-        android:layout_width="fill_parent"
+        android:layout_width="150dip"
         android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/textView1"
         android:layout_below="@+id/textView1"
         android:contentDescription="@string/select_disk_radiogroup" >
 
@@ -97,5 +98,23 @@
         android:scrollbars="vertical"
         android:text="@string/partitions"
         android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView1"
+        android:layout_alignTop="@+id/radioGroup"
+        android:layout_toRightOf="@+id/radioGroup" 
+        android:scrollbars="vertical"
+        android:text="@string/buffer"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <Spinner
+        android:id="@+id/spinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/radioGroup" 
+        android:layout_below="@+id/textView5" />
 
 </RelativeLayout>
