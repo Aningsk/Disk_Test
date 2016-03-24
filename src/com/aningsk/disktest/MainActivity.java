@@ -56,18 +56,16 @@ public class MainActivity extends Activity {
         showRamSize = (TextView)findViewById(R.id.textView2);
         showDiskSize = (TextView)findViewById(R.id.textView3);
         showInformation = (TextView)findViewById(R.id.textView4);
-        //----
         bufferSpinner = (Spinner) findViewById(R.id.spinner);
     
         bufferList = new ArrayList<String>();
         for (int i = 0; i < DiskTestApplication.BUFFER.length - 1; i++) 
         	if (0 != DiskTestApplication.BUFFER[i])
-        		bufferList.add(DiskTestApplication.BUFFER[i] + " B ");
+        		bufferList.add(DiskTestApplication.BUFFER[i] + " B");
 
         bufferAdapter= new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, bufferList);
         bufferAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         bufferSpinner.setAdapter(bufferAdapter);
-        //----
         
         receiver = new serviceReceiver();
 		IntentFilter testFilter = new IntentFilter("TestEnd");
