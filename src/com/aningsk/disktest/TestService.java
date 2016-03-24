@@ -4,13 +4,13 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.DecimalFormat;
-
+import java.text.SimpleDateFormat;
+import android.annotation.SuppressLint;
 import android.app.Service;
 import android.content.Intent;
 import android.os.Environment;
 import android.os.IBinder;
 import android.util.Log;
-
 import com.aningsk.disktest.FileOperation.Result;
 
 public class TestService extends Service implements Runnable {
@@ -24,10 +24,9 @@ public class TestService extends Service implements Runnable {
 	private static String resultPath = DiskTestApplication.getResultPath();
 	private static String resultName = File.separator + DiskTestApplication.getResultFileName();
 	
-//	private static int[] testsize = {16, 32, 64, 128, 256, 512, 1024};
-	private static int[] testsize = {16, 32};
+	private static int[] testsize = DiskTestApplication.testsize;
 	private static int QUANTITY = testsize.length;
-	private static int COUNT = 5;
+	private static int COUNT = DiskTestApplication.defaultCount;
 	private static double avrSpeed_w = 0;
 	private static double avrSpeed_r = 0;
 	private static long w_crc32;
@@ -48,6 +47,7 @@ public class TestService extends Service implements Runnable {
 	public void run() {
 		resultPath = DiskTestApplication.getResultPath();
 		resultName = DiskTestApplication.getResultFileName();
+		COUNT = DiskTestApplication.getCount();
 		
 		File folder = new File(resultPath);
 		if (!folder.exists())
@@ -64,6 +64,7 @@ public class TestService extends Service implements Runnable {
 		}
 	}
 
+	@SuppressLint("SimpleDateFormat")
 	public void runService() throws IOException {
 		int filesize = 0;
 		int count = 0;
@@ -74,7 +75,20 @@ public class TestService extends Service implements Runnable {
 			resultFile.delete();
 		
 		FileWriter resultWriter = null;
-        
+		
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd  hh:mm:ss"); 
+		String startDate = dateFormat.format(new java.util.Date());
+		resultWriter = new FileWriter(resultFile, true);
+		resultWriter.write("Start Time: " + startDate + "\n");
+		resultWriter.write("Buffer Size: " + DiskTestApplication.getBufferSize() + " B.\n\n");
+		resultWriter.close();
+		
+		if (DiskTestApplication.isDiskBigEnough() == false) {
+			resultWriter = new FileWriter(resultFile, true);
+			resultWriter.write("Warning: The disk is not big enough. Test will fail!\n\n");
+			resultWriter.close();
+		}
+		
 		/*
 		 * Now I support 2 units in DiskTestApplication (KB, MB), 
 		 * but I only use KB and MB.
@@ -182,7 +196,8 @@ public class TestService extends Service implements Runnable {
 					avrSpeed_w = (double)Math.round(avrSpeed_w * 1000000) / 1000000.0;
 					avrSpeed_r = (double)Math.round(avrSpeed_r * 1000000) / 1000000.0;
 					
-					resultWriter.write(("Result of " + filesize + "KB is:\n"));
+					resultWriter.write(("Result of " + filesize + 
+							(FileOperation.getUnit() == DiskTestApplication.KB ? "KB is:\n" : "MB is:\n")));
 					resultWriter.write(("write average speed is " + df.format(avrSpeed_w) + "M/s.\n"));
 					resultWriter.write(("read average speed is " + df.format(avrSpeed_r) + "M/s.\n"));
 				}
@@ -195,6 +210,11 @@ public class TestService extends Service implements Runnable {
 			} 
 			//All kinds size test is end.
 		}
+		
+		String endDate = dateFormat.format(new java.util.Date());
+		resultWriter = new FileWriter(resultFile, true);
+		resultWriter.write("End Time: " + endDate + "\n");
+		resultWriter.close();
 		
 		if (completeFlag) {
 			Intent testEnd = new Intent("TestEnd");

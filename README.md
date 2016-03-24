@@ -1,17 +1,23 @@
-#Disk Test (Version 2.10) 
+#Disk Test (Version 3.0) 
 This Android APP is use to test your device's SD/eMMC.   
 Developed by Aningsk, and comply with Apache License Version 2.0
 
 ##Description
 Well actually the APP just maltreat your device. Yes, it is.  
 This APP can calculate the speed of read/write in SD/eMMC, and save the result in a file.
-User can select where they want to take test on (Internal or External Disk).
+User can select where they want to take test on (Internal or External Disk). It also show 
+some other information such as RAM size, disk size and so on.  
 As a whole test will spend too long time. In most case I don't take full test.
 If you want to take different quantity test, please change the QUANTITY or testsize in TestService.java 
-and make sure that your device has enough big disk.   
+and make sure that your device has enough big disk. You can change the buffer size and repeat times 
+used by the APP to run the test.   
 When the APP takes a test, it will create TestFile.txt with random data, and copy it as 
 TempFile.txt . APP can check the CRC32 of these two file are the same value or not, and get the 
-speed of read/write. And repeat 5 times. User can see the result by clicking "Result" button.
+speed of read/write. And repeat 5 times (you can change it). Test result content is saved in 
+TestResult.txt user can see it by clicking "Result" button. This file also saved the buffer size 
+and test start/end time. You also can refresh the result by clicking "Partitions"/"Result" button.   
+If you stop one test manually, please make sure that the TestResult.txt had been written with 
+"End Time: ...", that showes the test is real end. And then you can take other test safely.
 
 I use ADT(eclipse) to develop this project. I cannot get Android Studio.  
 And run it on Android-4.4.2 (I don't test it on other Android versions.), 
@@ -25,6 +31,11 @@ I'm a Chinese newbie programmer without any VPN @\_@
 
 ***
 ##Version Mark 
+* v3.0 (2016-03-24) Major Upgrade   
+    Yes! Now it is enough cool for the name "v3.0"!  
+    User can select the buffer size and test times on the UI. And if something are important APP would 
+    tell them to user, such as disk is not big enough. I also change the content of TestResult.txt, 
+    this file will record the buffer size and start/end time.  
 * v2.10 (2016-03-22)  
     OK I had realized the function that should be in v3.0 which I predicted. But I don't use "v3.0" 
     because it's not so cool for the "3.0". I don't change v2.9 versionCode just change the versionName 

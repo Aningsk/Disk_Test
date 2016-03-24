@@ -9,6 +9,7 @@ import android.os.Environment;
 public class DiskTestApplication extends Application{
 	private static boolean internalDiskSelected = true; //default select internal disk.
 	private static boolean takeCrossTestSelected = false;
+	private static boolean diskBigEnough = true;
 	
 	private static Context context;
 
@@ -22,14 +23,21 @@ public class DiskTestApplication extends Application{
 	private static String testData;
 	
 	private static int bufferSize;
+	private static int count = 0;
+	
+	public static final int defaultCount = 5;
+	public static final int[] testsize = {16, 32, 64, 128, 256, 512, 1024};
 	
 	public static final int KB = 1024;
 	public static final int MB = 1024 * 1024;
 	public static final int[] UNIT = {KB, MB, 0};//Must end with 0.
 	
 	public static final int buffer_1k = 1024;
+	public static final int buffer_2k = 2048;
 	public static final int buffer_4k = 4096;
-	public static final int[] BUFFER = {buffer_1k, buffer_4k, 0};
+	public static final int buffer_8K = 8192;
+	public static final int buffer_16K = 16384;
+	public static final int[] BUFFER = {buffer_1k, buffer_2k, buffer_4k, buffer_8K, buffer_16K, 0};
 	
 	public void onCreate() {
 		context = getApplicationContext();
@@ -41,8 +49,6 @@ public class DiskTestApplication extends Application{
 		tempFileName = "TempFile.txt";
 		resultFileName = "TestResult.txt";
 		testData = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-		
-		bufferSize = buffer_1k;
 	}
 	
 	public static boolean getInternalDiskSelectState() {
@@ -117,5 +123,21 @@ public class DiskTestApplication extends Application{
 	
 	public static int getBufferSize() {
 		return bufferSize;
+	}
+
+	public static int getCount() {
+		return count;
+	}
+
+	public static void setCount(int count) {
+		DiskTestApplication.count = count;
+	}
+
+	public static boolean isDiskBigEnough() {
+		return diskBigEnough;
+	}
+
+	public static void setDiskBigEnough(boolean diskBigEnough) {
+		DiskTestApplication.diskBigEnough = diskBigEnough;
 	}
 }
