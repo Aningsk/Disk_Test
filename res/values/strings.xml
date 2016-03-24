@@ -16,6 +16,8 @@
     <string name="disk_size">Disk Size</string>
     <string name="partitions">Partitions</string>
     <string name="buffer">Buffer</string>
+    <string name="times">Times</string>
+    <string name="need_number">number</string>
     <string name="available">Available</string>
     <string name="total">Total</string>
     
@@ -29,5 +31,7 @@
     <string name="test_on_both">Test on Both Diskes</string>
     <string name="cannot_change">Warning: Not found External Disk!</string>
     <string name="change_locked">Test is running. Don\'t change it!</string>
+    
+    <string name="set_default_times">Now set the times to default value.</string>
 
 </resources>
