@@ -27,7 +27,7 @@ public class TestService extends Service implements Runnable {
 //	private static int[] testsize = {16, 32, 64, 128, 256, 512, 1024};
 	private static int[] testsize = {16, 32};
 	private static int QUANTITY = testsize.length;
-	private static int COUNT = 2;
+	private static int COUNT = DiskTestApplication.defaultCount;
 	private static double avrSpeed_w = 0;
 	private static double avrSpeed_r = 0;
 	private static long w_crc32;
@@ -48,6 +48,7 @@ public class TestService extends Service implements Runnable {
 	public void run() {
 		resultPath = DiskTestApplication.getResultPath();
 		resultName = DiskTestApplication.getResultFileName();
+		COUNT = DiskTestApplication.getCount();
 		
 		File folder = new File(resultPath);
 		if (!folder.exists())

@@ -17,6 +17,7 @@
     <string name="partitions">分区信息</string>
     <string name="buffer">缓冲区</string>
     <string name="times">次数</string>
+    <string name="need_number">数字</string>
     <string name="available">可用</string>
     <string name="total">共计</string>
     
@@ -30,5 +31,7 @@
     <string name="test_on_both">内部磁盘与外部磁盘交叉测试</string>
     <string name="cannot_change">警告：没有外部磁盘！</string>
     <string name="change_locked">别动！测试中不许更改</string>
+    
+    <string name="set_default_times">现已将测试次数设置为默认值。</string>
     
 </resources>

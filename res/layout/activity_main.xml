@@ -135,7 +135,7 @@
         android:layout_alignTop="@+id/spinner"
         android:inputType="number" 
         android:imeOptions="actionDone"
-        android:hint="@string/times"/>
+        android:hint="@string/need_number"/>
 
 
 </RelativeLayout>

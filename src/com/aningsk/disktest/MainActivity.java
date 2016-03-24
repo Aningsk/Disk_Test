@@ -28,6 +28,7 @@ import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
+import android.widget.Toast;
 
 public class MainActivity extends Activity {
 	private Intent service;
@@ -87,6 +88,7 @@ public class MainActivity extends Activity {
 			@Override
 			public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
 				// TODO Auto-generated method stub
+				DiskTestApplication.setCount(Integer.valueOf(timesEditText.getText().toString()).intValue());
 				return false;
 			}
         });
@@ -207,9 +209,15 @@ public class MainActivity extends Activity {
     }
     
 	public void clickStart(View v) {
+		if (DiskTestApplication.getCount() == 0) {
+			DiskTestApplication.setCount(DiskTestApplication.defaultCount);
+			timesEditText.setText(Integer.valueOf(DiskTestApplication.defaultCount).toString());
+			Toast.makeText(MainActivity.this, getResources().getString(R.string.set_default_times), Toast.LENGTH_LONG).show(); 
+		}
 		lockRadioGroup = true;
 		selectDisk.setEnabled(false);
 		bufferSpinner.setEnabled(false);
+		timesEditText.setEnabled(false);
 		if (!startFlag) {
 			showView.setText(R.string.please_wait);
 			startFlag = true;
@@ -223,6 +231,7 @@ public class MainActivity extends Activity {
 		lockRadioGroup = false;
 		selectDisk.setEnabled(true);
 		bufferSpinner.setEnabled(true);
+		timesEditText.setEnabled(true);
 		if (startFlag)
 			startFlag = false;
 		showView.setText(R.string.test_stop);

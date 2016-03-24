@@ -22,6 +22,9 @@ public class DiskTestApplication extends Application{
 	private static String testData;
 	
 	private static int bufferSize;
+	private static int count = 0;
+	
+	public static final int defaultCount = 5;
 	
 	public static final int KB = 1024;
 	public static final int MB = 1024 * 1024;
@@ -118,5 +121,13 @@ public class DiskTestApplication extends Application{
 	
 	public static int getBufferSize() {
 		return bufferSize;
+	}
+
+	public static int getCount() {
+		return count;
+	}
+
+	public static void setCount(int count) {
+		DiskTestApplication.count = count;
 	}
 }
