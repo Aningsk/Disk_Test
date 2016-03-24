@@ -105,37 +105,38 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/textView1"
         android:layout_alignTop="@+id/radioGroup"
-        android:layout_toRightOf="@+id/radioGroup" 
+        android:layout_toLeftOf="@+id/spinner" 
+        android:layout_alignBaseline="@+id/spinner"
         android:scrollbars="vertical"
         android:text="@string/buffer"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
-	<TextView
-        android:id="@+id/textView6"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/editText"
-        android:layout_alignTop="@+id/textView5"
-        android:scrollbars="vertical"
-        android:text="@string/times"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
-	
     <Spinner
         android:id="@+id/spinner"
         android:layout_width="100dip"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/radioGroup" 
-        android:layout_below="@+id/textView5" />
-    
+        android:layout_below="@+id/textView1"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="28dp" />
+
     <EditText
         android:id="@+id/editText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/spinner"
-        android:layout_alignTop="@+id/spinner"
-        android:inputType="number" 
+        android:layout_alignLeft="@+id/spinner"
+        android:layout_below="@+id/spinner"
+        android:hint="@string/need_number"
         android:imeOptions="actionDone"
-        android:hint="@string/need_number"/>
+        android:inputType="number" />
 
+    <TextView
+        android:id="@+id/textView6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/textView5"
+        android:layout_alignBaseline="@+id/editText"
+        android:scrollbars="vertical"
+        android:text="@string/times"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
 </RelativeLayout>
