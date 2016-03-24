@@ -9,6 +9,7 @@ import android.os.Environment;
 public class DiskTestApplication extends Application{
 	private static boolean internalDiskSelected = true; //default select internal disk.
 	private static boolean takeCrossTestSelected = false;
+	private static boolean diskBigEnough = true;
 	
 	private static Context context;
 
@@ -130,5 +131,13 @@ public class DiskTestApplication extends Application{
 
 	public static void setCount(int count) {
 		DiskTestApplication.count = count;
+	}
+
+	public static boolean isDiskBigEnough() {
+		return diskBigEnough;
+	}
+
+	public static void setDiskBigEnough(boolean diskBigEnough) {
+		DiskTestApplication.diskBigEnough = diskBigEnough;
 	}
 }

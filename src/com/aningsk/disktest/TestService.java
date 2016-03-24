@@ -4,13 +4,13 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.DecimalFormat;
-
+import java.text.SimpleDateFormat;
+import android.annotation.SuppressLint;
 import android.app.Service;
 import android.content.Intent;
 import android.os.Environment;
 import android.os.IBinder;
 import android.util.Log;
-
 import com.aningsk.disktest.FileOperation.Result;
 
 public class TestService extends Service implements Runnable {
@@ -64,6 +64,7 @@ public class TestService extends Service implements Runnable {
 		}
 	}
 
+	@SuppressLint("SimpleDateFormat")
 	public void runService() throws IOException {
 		int filesize = 0;
 		int count = 0;
@@ -74,7 +75,19 @@ public class TestService extends Service implements Runnable {
 			resultFile.delete();
 		
 		FileWriter resultWriter = null;
-        
+		
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd  hh:mm:ss"); 
+		String startDate = dateFormat.format(new java.util.Date());
+		resultWriter = new FileWriter(resultFile, true);
+		resultWriter.write("Start Time: " + startDate + "\n");
+		resultWriter.close();
+		
+		if (DiskTestApplication.isDiskBigEnough() == false) {
+			resultWriter = new FileWriter(resultFile, true);
+			resultWriter.write("Warning: The disk is not big enough. Test will fail!\n\n");
+			resultWriter.close();
+		}
+		
 		/*
 		 * Now I support 2 units in DiskTestApplication (KB, MB), 
 		 * but I only use KB and MB.
@@ -197,6 +210,11 @@ public class TestService extends Service implements Runnable {
 			} 
 			//All kinds size test is end.
 		}
+		
+		String endDate = dateFormat.format(new java.util.Date());
+		resultWriter = new FileWriter(resultFile, true);
+		resultWriter.write("End Time: " + endDate + "\n");
+		resultWriter.close();
 		
 		if (completeFlag) {
 			Intent testEnd = new Intent("TestEnd");

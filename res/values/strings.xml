@@ -33,5 +33,7 @@
     <string name="change_locked">Test is running. Don\'t change it!</string>
     
     <string name="set_default_times">Now set the times to default value.</string>
+    <string name="need_more_disk">The disk is not big enough. Test will fail with big file!</string>
+    <string name="too_small_disk">The disk is too small to running test!</string>
 
 </resources>

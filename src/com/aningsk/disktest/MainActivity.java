@@ -16,6 +16,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -88,7 +89,11 @@ public class MainActivity extends Activity {
 			@Override
 			public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
 				// TODO Auto-generated method stub
-				DiskTestApplication.setCount(Integer.valueOf(timesEditText.getText().toString()).intValue());
+				String valueStr = timesEditText.getText().toString();
+				if (valueStr.length() == 0)
+					valueStr = "0";
+				//The "Times" is COUNT in TestService. Just different names.
+				DiskTestApplication.setCount(Integer.valueOf(valueStr).intValue());
 				return false;
 			}
         });
@@ -214,6 +219,10 @@ public class MainActivity extends Activity {
 			timesEditText.setText(Integer.valueOf(DiskTestApplication.defaultCount).toString());
 			Toast.makeText(MainActivity.this, getResources().getString(R.string.set_default_times), Toast.LENGTH_LONG).show(); 
 		}
+		
+		if (checkDiskBigEnough() == false)
+			return;
+		
 		lockRadioGroup = true;
 		selectDisk.setEnabled(false);
 		bufferSpinner.setEnabled(false);
@@ -260,6 +269,97 @@ public class MainActivity extends Activity {
 			reslutButton.setText(R.string.result_button);
 		}
 		inforFlag = !inforFlag;
+	}
+	
+	/**
+	 * private boolean checkDiskBigEnough()
+	 * 		used by clickStart()
+	 * 
+	 * Check whether the disk(internal OR/AND external) is big enough.
+	 * If the disk is too small to running any test, 
+	 * RETURN false!
+	 * If the disk is not enough big to run all test, or it's big enough,
+	 * RETURN true!
+	 *
+	 * The function is TOO UGLY, you can fold it. Orz...
+	 */
+	private boolean checkDiskBigEnough() {
+		Toast toast;
+		
+		switch (selectedRadioButton) {
+		case R.id.radioButton1: //Internal Disk
+			if (SystemInfo.getAvailableInternalMemorySize() <= 
+					DiskTestApplication.testsize[0] * DiskTestApplication.KB) {
+				toast = Toast.makeText(MainActivity.this, 
+						getResources().getString(R.string.too_small_disk), 
+						Toast.LENGTH_LONG);
+				toast.setGravity(Gravity.CENTER, 0, 0);
+				toast.show();
+				DiskTestApplication.setDiskBigEnough(false);
+				return false;
+			} else if (SystemInfo.getAvailableInternalMemorySize() <= 
+					DiskTestApplication.testsize[DiskTestApplication.testsize.length - 1] * DiskTestApplication.MB) {
+				toast = Toast.makeText(MainActivity.this, 
+						getResources().getString(R.string.need_more_disk), 
+						Toast.LENGTH_LONG);
+				toast.setGravity(Gravity.CENTER, 0, 0);
+				toast.show();
+				DiskTestApplication.setDiskBigEnough(false);
+			} else {
+				DiskTestApplication.setDiskBigEnough(true);
+			}
+			break;
+		case R.id.radioButton2: //External Disk
+			if (SystemInfo.getAvailableExternalMemorySize() <= 
+					DiskTestApplication.testsize[0] * DiskTestApplication.KB) {
+				toast = Toast.makeText(MainActivity.this, 
+						getResources().getString(R.string.too_small_disk), 
+						Toast.LENGTH_LONG);
+				toast.setGravity(Gravity.CENTER, 0, 0);
+				toast.show();
+				DiskTestApplication.setDiskBigEnough(false);
+				return false;
+			} else if (SystemInfo.getAvailableExternalMemorySize() <= 
+					DiskTestApplication.testsize[DiskTestApplication.testsize.length - 1] * DiskTestApplication.MB) {
+				toast = Toast.makeText(MainActivity.this, 
+						getResources().getString(R.string.need_more_disk), 
+						Toast.LENGTH_LONG);
+				toast.setGravity(Gravity.CENTER, 0, 0);
+				toast.show();
+				DiskTestApplication.setDiskBigEnough(false);
+			} else {
+				DiskTestApplication.setDiskBigEnough(true);
+			}
+			break;
+		case R.id.radioButton3: //Cross Test
+			if (SystemInfo.getAvailableExternalMemorySize() <= 
+					DiskTestApplication.testsize[0] * DiskTestApplication.KB || 
+					SystemInfo.getAvailableInternalMemorySize() <= 
+					DiskTestApplication.testsize[0] * DiskTestApplication.KB) {
+				toast = Toast.makeText(MainActivity.this, 
+						getResources().getString(R.string.too_small_disk), 
+						Toast.LENGTH_LONG);
+				toast.setGravity(Gravity.CENTER, 0, 0);
+				toast.show();
+				DiskTestApplication.setDiskBigEnough(false);
+				return false;
+			} else if (SystemInfo.getAvailableExternalMemorySize() <= 
+					DiskTestApplication.testsize[DiskTestApplication.testsize.length - 1] * DiskTestApplication.MB || 
+					SystemInfo.getAvailableInternalMemorySize() <= 
+					DiskTestApplication.testsize[DiskTestApplication.testsize.length - 1] * DiskTestApplication.MB) {
+				toast = Toast.makeText(MainActivity.this, 
+						getResources().getString(R.string.need_more_disk), 
+						Toast.LENGTH_LONG);
+				toast.setGravity(Gravity.CENTER, 0, 0);
+				toast.show();
+				DiskTestApplication.setDiskBigEnough(false);
+			} else {
+			DiskTestApplication.setDiskBigEnough(true);
+			}
+			break;
+		}
+		
+		return true;
 	}
 
 	private class serviceReceiver extends BroadcastReceiver{

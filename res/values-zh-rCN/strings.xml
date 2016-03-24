@@ -33,5 +33,7 @@
     <string name="change_locked">别动！测试中不许更改</string>
     
     <string name="set_default_times">现已将测试次数设置为默认值。</string>
+    <string name="need_more_disk">磁盘可用空间不够，测试大文件将会失败！</string>
+    <string name="too_small_disk">磁盘可用控件太小，测试完全不能运行！</string>
     
 </resources>
