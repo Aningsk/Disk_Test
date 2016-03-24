@@ -48,7 +48,6 @@ public class FileOperation {
 	}
 	
 	FileOperation() {
-		//DiskTestApplication.setBufferSize(DiskTestApplication.buffer_4k);
 		bufferSize = DiskTestApplication.getBufferSize();
 		testPath = DiskTestApplication.getTestPath();
 		testFile = DiskTestApplication.getTestFileName();
@@ -62,33 +61,13 @@ public class FileOperation {
 class writeOperation extends FileOperation { 
 	
 	private Result __writeFile(File saveFile, int filesize) {
-		//Random random = new Random();
-		//bufferSize = DiskTestApplication.getBufferSize();
 		char[] writeBuffer = new char[bufferSize];
 		
 		if (saveFile.exists())
 			saveFile.delete();
 		try {
 			FileWriter fileWriter = new FileWriter(saveFile, true);
-/*			
-			for (int i = 0; i < filesize; i++) {
-				for (int j = 0; j < (unit >= bufferSize ? unit / bufferSize: unit); j++) {
-					for (int c = 0; c < (bufferSize < unit ? bufferSize : unit); c++) {
-						int number = random.nextInt(string.length());// [0,62)
-						writeBuffer[c] = string.charAt(number);
-					}
-					//when writeBuffer is full, we write it into file.
-					startTime = System.nanoTime();
-					fileWriter.write(writeBuffer);
-					endTime = System.nanoTime();
-					useTime = useTime + endTime - startTime;
-					Thread.sleep(5);
-				}
-			}
-*/
-//			if (debug)Log.i("DEBUG-NEW", "filesize: " + filesize);
-//			if (debug)Log.i("DEBUG-NEW", "unit: " + unit);
-//			if (debug)Log.i("DEBUG-NEW", "bufferSize: " + bufferSize);
+
 			for (int i = 0; i < filesize * unit / bufferSize; i++) {
 				for (int j = 0; j < bufferSize; j++) {
 					int number = random.nextInt(string.length());
@@ -134,7 +113,6 @@ class writeOperation extends FileOperation {
 class readOperation extends FileOperation { 
 	
 	private Result __readFile(File saveFile, File tempFile) {
-		//bufferSize = DiskTestApplication.getBufferSize();
 		char[] readBuffer = new char[bufferSize];
 		int filesize = 0;
 		int n = 0;

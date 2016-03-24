@@ -44,8 +44,6 @@ public class DiskTestApplication extends Application{
 		tempFileName = "TempFile.txt";
 		resultFileName = "TestResult.txt";
 		testData = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-		
-		//bufferSize = buffer_1k;
 	}
 	
 	public static boolean getInternalDiskSelectState() {

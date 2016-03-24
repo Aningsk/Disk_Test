@@ -16,7 +16,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -85,12 +84,10 @@ public class MainActivity extends Activity {
 					int position, long id) {
 				// TODO Auto-generated method stub		
 				DiskTestApplication.setBufferSize(DiskTestApplication.BUFFER[(int)id]);
-				Log.i("DEBUG", "spinner id:" + id);
 			}
 			@Override
 			public void onNothingSelected(AdapterView<?> parent) {
 				// TODO Auto-generated method stub
-				//DiskTestApplication.setBufferSize(DiskTestApplication.buffer_1k);
 			}
         });
         selectDisk.setOnCheckedChangeListener(new OnCheckedChangeListener() {
