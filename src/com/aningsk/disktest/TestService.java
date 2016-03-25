@@ -76,7 +76,7 @@ public class TestService extends Service implements Runnable {
 		
 		FileWriter resultWriter = null;
 		
-		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd  hh:mm:ss"); 
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd  HH:mm:ss"); 
 		String startDate = dateFormat.format(new java.util.Date());
 		resultWriter = new FileWriter(resultFile, true);
 		resultWriter.write("Start Time: " + startDate + "\n");
